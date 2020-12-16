@@ -2,11 +2,86 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c760e50a-f524-465c-aef9-9439563d3309" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid14980.log" beforeDir="false" afterPath="$PROJECT_DIR$/hs_err_pid14980.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/action/InsightApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/action/InsightApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/action/ServiceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/action/ServiceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/api/ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/api/ApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/data_source/DatabaseConnections.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/data_source/DatabaseConnections.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/data_source/DruidConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/data_source/DruidConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/exception_handler/ShiroExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/exception_handler/ShiroExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/factory/database/DatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/DatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/factory/database/DatabaseOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/DatabaseOperation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/factory/database/imp/mysql/MysqlDatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/imp/mysql/MysqlDatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/factory/database/imp/sqlite/SQLiteDatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/imp/sqlite/SQLiteDatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/file/FileConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/file/FileConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/message/MessageReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/message/MessageReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/model/ApiModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/ApiModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/model/FileModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/FileModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/ApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/ApiServiceImpl.java.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ApiServiceImpl.java.tmp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/BaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/ResultBaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_database_connection_config/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_connection_config/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_database_connection_config/ServiceDatabaseConnectionConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_connection_config/ServiceDatabaseConnectionConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_database_table/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_table/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_database_table/ServiceDatabaseTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_table/ServiceDatabaseTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_file_upload_save/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_file_upload_save/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_file_upload_save/ServiceFileUploadSave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_file_upload_save/ServiceFileUploadSave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_page_info/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_page_info/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_page_info/ServicePageInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_page_info/ServicePageInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_create/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_create/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_create/ServicePlatformCreate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_create/ServicePlatformCreate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_login/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_login/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_login/ServicePlatformLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_login/ServicePlatformLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query/ServicePlatformQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query/ServicePlatformQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query_simple/ServicePlatformQuerySimple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_simple/ServicePlatformQuerySimple.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query_template/ServicePlatformQueryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_template/ServicePlatformQueryTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_update/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_update/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_update/ServicePlatformUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_update/ServicePlatformUpdate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_version_iteration/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_version_iteration/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_version_iteration/ServiceVersionIteration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_version_iteration/ServiceVersionIteration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/shiro/AuthRealm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/shiro/AuthRealm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/shiro/CredentialsMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/shiro/CredentialsMatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/shiro/ShiroConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/shiro/ShiroConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/ssh/service_server_login/ServiceServerLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/ssh/service_server_login/ServiceServerLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/ssh/service_server_scan/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/ssh/service_server_scan/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/ssh/service_server_scan/ServiceServerScan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/ssh/service_server_scan/ServiceServerScan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/ssh/service_server_ssh/ServiceServerSSH.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/ssh/service_server_ssh/ServiceServerSSH.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/ApiCacheUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ApiCacheUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/ConcreteEncrypt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ConcreteEncrypt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/CustomEncryptStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/CustomEncryptStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/DatabaseConnectionConfigUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/DatabaseConnectionConfigUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/DatabaseUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/DateTimeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/DateTimeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/EncryptContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/EncryptContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/EnvUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/EnvUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/FileInfoUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/FileInfoUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/IEncryptStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/IEncryptStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/IPUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/IPUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/MD5EncryptStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/MD5EncryptStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/MD5Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/MD5Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/MessageUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/MessageUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/OperationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/OperationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/PlatformQuerySimpleUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/PlatformQuerySimpleUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/PlatformQueryUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/PlatformQueryUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/PlatformUpdateUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/PlatformUpdateUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/ResultUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ResultUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/SSHUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/SSHUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/ServicePlatformCreateUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ServicePlatformCreateUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/ShaEncryptStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ShaEncryptStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/SpringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/SpringUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/SpringUtils.java.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/SpringUtils.java.tmp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/SqliteUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/SqliteUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/StringJoinUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/StringJoinUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/StringTemplateUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/StringTemplateUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/TreeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/TreeUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/thread_pool/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/thread_pool/Executor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sql_api/insight/utils/thread_pool/ssh/connect/ServerPortConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/thread_pool/ssh/connect/ServerPortConnect.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -66,11 +141,11 @@
   </component>
   <component name="RunManager" selected="Application.Application">
     <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sql_api.Application" />
+      <option name="MAIN_CLASS_NAME" value="com.platform.Application" />
       <module name="sql-api" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.sql_api.*" />
+          <option name="PATTERN" value="com.platform.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -79,11 +154,11 @@
       </method>
     </configuration>
     <configuration name="StringTemplateUtils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sql_api.insight.utils.StringTemplateUtils" />
+      <option name="MAIN_CLASS_NAME" value="com.platform.insight.utils.StringTemplateUtils" />
       <module name="sql-api" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.sql_api.insight.utils.*" />
+          <option name="PATTERN" value="com.platform.insight.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -183,37 +258,37 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_database_connection_config/ServiceDatabaseConnectionConfig.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_connection_config/ServiceDatabaseConnectionConfig.java</url>
           <line>50</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/ssh/service_server_ssh/ServiceServerSSH.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/ssh/service_server_ssh/ServiceServerSSH.java</url>
           <line>29</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/service/ResultBaseService.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java</url>
           <line>666</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query_template/ServicePlatformQueryTemplate.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_template/ServicePlatformQueryTemplate.java</url>
           <line>61</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/factory/database/DatabaseFactory.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/DatabaseFactory.java</url>
           <line>448</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query_template/ServicePlatformQueryTemplate.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_template/ServicePlatformQueryTemplate.java</url>
           <line>90</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sql_api/insight/service_platform_query_template/ServicePlatformQueryTemplate.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_template/ServicePlatformQueryTemplate.java</url>
           <line>99</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>

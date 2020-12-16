@@ -1,0 +1,767 @@
+package com.shareworx.insight.service;
+
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.shareworx.auth.shiro.util.UserManager;
+import com.shareworx.insight.model.ApiModel;
+import com.shareworx.insight.utils.EnvUtils;
+import com.shareworx.insight.utils.SqliteUtils;
+
+import com.shareworx.insight.utils.StringJoinUtils;
+import com.shareworx.platform.persist.DatabaseConnections;
+import com.shareworx.platform.util.DateTimeUtil;
+import com.shareworx.platform.util.SpringUtils;
+import com.shareworx.platform.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+import java.util.stream.Collectors;
+
+
+@Service(ApiService.ID)
+public class ApiServiceImpl implements ApiService{
+
+
+    public static final String ID = "ApiService";
+    public boolean saveApi(ApiModel api) {
+        Connection conn = SqliteUtils.getConn();
+        try {
+            Statement statement = conn.createStatement();
+            String format = String.format("insert into collection_list(id,type,service,template,backup) values('%s','%s','%s','%s','%s')",System.currentTimeMillis()+"",api.getType(),api.getService(),api.getTemplate(),api.getBackup() );
+            boolean resultSet = statement.execute(format);
+            statement.close();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public ApiModel queryByService(String service) {
+        Connection conn = SqliteUtils.getConn();
+        try {
+            Statement statement = conn.createStatement();
+            String format = String.format("select * from collection_list where service = '%s' order by ID  limit 1 ", service);
+            ResultSet resultSet = statement.executeQuery(format);
+            if(resultSet.next()== false){
+                return null;
+            }else {
+                ApiModel apiModel = new ApiModel();
+                apiModel.setService(resultSet.getString("service"));
+                apiModel.setType(resultSet.getString("type"));
+                apiModel.setBackup(resultSet.getString("backup"));
+                apiModel.setTemplate(resultSet.getString("template"));
+                resultSet.close();
+                statement.close();
+                return apiModel;
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<ApiModel> queryByType(String type) {
+        Connection conn = SqliteUtils.getConn();
+        List<ApiModel> list  = new ArrayList<ApiModel>();
+        try {
+            Statement statement = conn.createStatement();
+            String format = String.format("select * from collection_list where type = '%s' order by ID desc ", type);
+            ResultSet resultSet = statement.executeQuery(format);
+            if(resultSet.next()== false){
+                return list;
+            }else {
+                do{
+                    ApiModel apiModel = new ApiModel();
+                    apiModel.setService(resultSet.getString("service"));
+                    apiModel.setType(resultSet.getString("type"));
+                    apiModel.setBackup(resultSet.getString("backup"));
+                    apiModel.setTemplate(resultSet.getString("template"));
+                    list.add(apiModel);
+                }while(resultSet.next());
+
+                resultSet.close();
+                statement.close();
+                return list;
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean deleteApi(String service) {
+        Connection conn = SqliteUtils.getConn();
+        try {
+            Statement statement = conn.createStatement();
+            String format = String.format("delete from collection_list where service = '%s'",service);
+            boolean resultSet = statement.execute(format);
+            statement.close();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean updateApi(ApiModel api) {
+        Connection conn = SqliteUtils.getConn();
+        try {
+            Statement statement = conn.createStatement();
+            String format = String.format("update collection_list set backup='%s',template= '%s' where service = '%s' ",api.getBackup() ,api.getTemplate(),api.getService());
+            boolean resultSet = statement.execute(format);
+            statement.close();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+    public Map<String ,Object> queryResult(JSONObject template) {
+        JdbcTemplate readTemplate = DatabaseConnections.getReadTemplate();
+        String sql = template.getString("sql");
+        //添加显示字段
+        JSONArray search_fields = template.getJSONArray("search_fields");
+        JSONArray show_fields = template.getJSONArray("show_fields");
+        if(show_fields.size()<=0){
+            return null;
+        }
+        //转换成sql
+        Map<String, Object> sql_map = getSQL(sql, search_fields, show_fields);
+        String data_sql = (String) sql_map.get("data_sql");
+        String count_sql = (String) sql_map.get("count_sql");
+        List<Object> sql_data = (List<Object>) sql_map.get("sql_data");
+        List<Map<String, Object>> maps = null;
+        long count = 0;
+        //执行语句
+        if(sql_data.size()>0){
+            maps = readTemplate.queryForList(data_sql,sql_data.toArray());
+            count = readTemplate.queryForObject(count_sql,sql_data.toArray(),Long.class);
+        }else{
+            maps =readTemplate.queryForList(data_sql);
+            count = readTemplate.queryForObject(count_sql,Long.class);
+        }
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("data",maps);
+        data.put("count",count);
+        return data;
+    }
+
+    @Override
+    public List<Map<String, Object>> getFields(JSONObject template) {
+        JSONArray show_fields = template.getJSONArray("show_fields");
+        List<Map<String,Object>> fields = new ArrayList<>();
+        for(int i = 0;i<show_fields.size();i++){
+            JSONObject jsonObject = show_fields.getJSONObject(i);
+            Map<String,Object> item= new HashMap<>();
+            item.put("field",jsonObject.getString("field_1"));
+            item.put("desc",jsonObject.getString("field_2"));
+            item.put("show",jsonObject.getString("field_3"));
+            item.put("can_update",jsonObject.getString("field_4"));
+            fields.add(item);
+        }
+        return fields;
+    }
+
+    @Override
+    public JSONObject updateSearchFields(Map<String, Object> actual, JSONObject template) {
+        if (actual == null) {
+            return template;
+        }
+        JSONArray search_fields = template.getJSONArray("search_fields");
+        for (int i = 0; i < search_fields.size(); i++) {
+            JSONObject o = search_fields.getJSONObject(i);
+            String field = o.getString("field_1");
+            if (actual.containsKey(field)) {
+                o.put("field_5", actual.get(field) + "");
+            }
+        }
+
+        return template;
+    }
+
+    @Override
+    public Map<String, Object> checkFields(Map<String, Object> actual,JSONArray fields,JSONObject templateALL) {
+        Map<String,Object> data = new HashMap<>();
+        //JSONArray fields = template.getJSONArray("fields");
+        for(int i =0;i<fields.size();i++){
+            JSONObject jsonObject = fields.getJSONObject(i);
+
+            String field = jsonObject.getString("field_1");
+            /**
+             * 检查规则
+             */
+            Map<String, Object> map_rules = checkActualRules(actual, field, jsonObject,templateALL);
+            if(map_rules != null){
+                return map_rules;
+            }
+            /**
+            * 检查类型
+            * */
+            Map<String, Object> map = checkActualTypes(actual, field, jsonObject);
+            if(map != null){
+                return map;
+            }
+
+        }
+        data.put("success",true);
+        return data;
+    }
+
+    /**
+     * 数据规则检查
+     * @param actual 实际参数
+     * @param field 字段
+     * @param field_template 字段模板
+     * @return
+     */
+    private Map<String,Object> checkActualRules(Map<String, Object> actual,String field,JSONObject field_template,JSONObject template_all){
+        String rule = field_template.getString("field_4");
+        Object value = actual.get(field);
+        String limit= field_template.getString("field_5");
+        switch (rule){
+            case "must":
+                //判断字段是否为空
+                Map<String, Object> must = isEmptyField(actual, field);
+                if(must!=null) {
+                    return must;
+                }
+                break;
+            case "unique":
+                //判断字段是否为空
+                Map<String, Object> emptyField = isEmptyField(actual, field);
+                if(emptyField!=null) {
+                    return emptyField;
+                }
+
+                if(!isJSONObject(limit)){
+                    return getResult(false,field+" :是否存在字段定义有误，必须为JSON");
+                }
+                List<Map<String, Object>> uniqueResult = getRulesResult(actual, field_template, field, template_all);
+                if(uniqueResult.size()>0){
+                    return getResult(false,field_template.getString("field_2")+" ：字段已经存在 " +value);
+                }
+
+                break;
+            case "exists":
+                //判断字段是否为空
+                Map<String, Object> existsEmptyField = isEmptyField(actual, field);
+                if(existsEmptyField!=null) {
+                    return existsEmptyField;
+                }
+                if(!isJSONObject(limit)){
+                    return getResult(false,field+"：是否存在字段定义有误，必须为JSON");
+                }
+
+                List<Map<String, Object>> rulesResult = getRulesResult(actual, field_template, field, template_all);
+                if(rulesResult.size()<=0){
+                    return getResult(false,"记录不存在");
+                }else if(rulesResult.size()>1){
+                    return getResult(false,"记录查询出 :"+rulesResult.size()+" 条。只能一条");
+                }else{
+                    template_all.put("records",rulesResult);
+                }
+
+                break;
+            case "update_unique":
+                //判断字段是否为空
+                Map<String, Object> uniqueMap = isEmptyField(actual, field);
+                if(uniqueMap!=null) {
+                    return uniqueMap;
+                }
+                List<Map<String, Object>> uniqueMapResult = getRulesResult(actual, field_template, field, template_all);
+                if(uniqueMapResult.size()>1){
+                    return getResult(false,field_template.getString("field_2")+" ：字段已经存在 " +value);
+                }else if(uniqueMapResult.size()==1){
+                    //和之前查询的记录作比较，必须有records
+                    Map<String, Object> map = uniqueMapResult.get(0);
+                    List<Map<String,Object>> records = (List<Map<String, Object>>) template_all.get("records");
+                   if(records == null){
+                       return getResult(false,"未保存记录");
+                   }
+                    for(int i=0;i<records.size();i++){
+                       if(!map.get(field).equals(records.get(i).get(field))){
+                           return getResult(false,field_template.getString("field_2")+" ：字段已经存在 " +value);
+                       }
+                   }
+                }
+
+
+                break;
+        }
+        return null;
+    }
+
+    private Map<String,Object> getResult(boolean success,String msg){
+        Map<String,Object> result = new HashMap<>();
+        result.put("success",success);
+        result.put("msg",msg);
+        return result;
+    }
+
+    private boolean isJSONObject(String content){
+        try{
+            JSONObject object = JSON.parseObject(content);
+            if(object ==null){
+                return false;
+            }else{
+                return true;
+            }
+
+        }catch (Exception e){
+            return false;
+        }
+
+
+    }
+    private List<Map<String, Object>> getRulesResult(Map<String,Object> actual ,JSONObject field_template,String field,JSONObject template_all){
+        String limit_exists = field_template.getString("field_5");
+        Object value_exists = actual.get(field);
+
+
+        JSONObject limitObject = JSON.parseObject(limit_exists);
+        Iterator<String> iterator = limitObject.keySet().iterator();
+        List<Object> objects = new ArrayList<>();
+        String sql = "select * from "+template_all.getString("table_name")+" where "+field+"= ? ";
+        objects.add(value_exists);
+        while(iterator.hasNext()){//获取伪删除字段
+            String key = iterator.next();
+            String valueOf = limitObject.getString(key);
+            sql+=" and "+key+" = ?";
+            objects.add(valueOf);
+        }
+        //检查数据库是否存在记录
+        List<Map<String, Object>> maps = DatabaseConnections.getReadTemplate().queryForList(sql,objects.toArray());
+
+        return  maps;
+
+
+    }
+
+    /**
+     *  检查实际传参字段类型是否正确
+     * @param actual 实际数据
+     * @param field 字段名称
+     * @param field_template 自动段模板
+     * @return 检查错误对象的信息
+     */
+    private Map<String,Object> checkActualTypes(Map<String, Object> actual,String field,JSONObject field_template){
+        String type = field_template.getString("field_3");
+        switch (type){
+            case "S":
+                break;
+            case "I":
+                Object o = actual.get(field);
+                //判断字段是否为空
+                Map<String, Object> emptyField = isEmptyField(actual, field);
+                //如果有值就检查
+                if(emptyField==null){
+                    try {
+                        Integer.parseInt(o+"");
+                    }catch (Exception ex){
+                        return getResult(false,field+"：必须是整数");
+
+                    }
+
+                }
+
+                break;
+
+            case "D":
+                Object d = actual.get(field);
+                //判断字段是否为空
+                Map<String, Object> dEmptyField = isEmptyField(actual, field);
+                //如果有值就检查
+                if(dEmptyField==null){
+                    try {
+                        Double.parseDouble(d+"");
+
+                    }catch (Exception ex){
+                        return getResult(false,field+"：必须是浮点数");
+
+                    }
+
+                }
+                break;
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param actual
+     * @param field
+     * @return 空的就返回对象，否则返回null
+     */
+    private Map<String,Object> isEmptyField(Map<String,Object> actual,String field){
+
+        if(!actual.containsKey(field)|| StringUtils.isEmpty(actual.get(field)+"")){
+            return getResult(false,field+"：字段不能为空");
+        }
+        return null;
+    }
+
+
+    /**
+     *
+     * @param default_fields
+     * @param field
+     * @return 返回找到字段的对象，否则null
+     */
+    private  JSONObject getDefaultField(JSONArray default_fields,String field){
+        for(int i =0;i<default_fields.size();i++){
+            JSONObject jsonObject = default_fields.getJSONObject(i);
+            String field_1 = jsonObject.getString("field_1");
+            if(field.equals(field_1)){
+                return jsonObject;
+            }
+        }
+        return null;
+    }
+    /**
+     *
+     * @param actual
+     * @param template
+     * @return 更新字段后的模板字符串
+     */
+    @Override
+    public JSONObject updateFields(Map<String, Object> actual, JSONObject template) {
+        //获取可更改字段
+        JSONArray fields = template.getJSONArray("fields");
+        //获取默认字段
+        JSONArray default_fields = template.getJSONArray("default_fields");
+        //将更在字段加入默认字段
+        for (int i=0;i<fields.size();i++){
+            JSONObject jsonObject = fields.getJSONObject(i);
+            String field = jsonObject.getString("field_1");
+            if(actual.containsKey(field)){
+                jsonObject.put("field_4",actual.get(field));
+                JSONObject defaultField = getDefaultField(default_fields, field);
+                //没有就添加新字段,否则就修改
+                if(defaultField == null){
+                    default_fields.add(jsonObject);
+                }else{
+                    defaultField.put("field_4",actual.get(field));
+                }
+
+            }
+        }
+
+        for (int i=0;i<default_fields.size();i++){
+            JSONObject object = default_fields.getJSONObject(i);
+            Object rulesValue = getRulesValue(object, actual);
+            //填充数据
+            if(rulesValue!= null){
+                object.put("field_4",rulesValue);
+            }/*
+            String field = object.getString("field_1");
+            String rule = object.getString("field_3");
+            //数据类型
+            switch (rule){
+                case "S":
+                    break;
+                case "I":
+                    //如果有值就转换
+                    if(isEmptyField(actual,field) == null){
+                        object.put("field_4",object.getInteger("field_4"));
+                    }
+                    break;
+                case "D":
+                    //如果有值就转换
+                    if(isEmptyField(actual,field) == null){
+                        object.put("field_4",object.getDoubleValue("field_4"));
+                    }
+                    break;
+                case "UUID":
+
+                    object.put("field_4",UUID.randomUUID().toString());
+                    break;
+                case "DATETIME":
+                    object.put("field_4", DateTimeUtil.getTimestamp());
+                    break;
+                case "USER_ID":
+                    object.put("field_4", UserManager.getCurrentUser().getPk_user());
+                    break;
+            }*/
+        }
+        return template;
+    }
+
+    private Object getRulesValue(JSONObject field_obj,Map<String,Object> actual){
+        String field = field_obj.getString("field_1");
+        String rule = field_obj.getString("field_3");
+        //数据类型
+        switch (rule){
+            case "S":
+                return field_obj.getString("field_4");
+
+            case "I":
+                //如果有值就转换
+                if(isEmptyField(actual,field) == null){
+                    return field_obj.getInteger("field_4");
+                }
+                break;
+            case "D":
+                //如果有值就转换
+                if(isEmptyField(actual,field) == null){
+                    return field_obj.getDoubleValue("field_4");
+                }
+                break;
+            case "UUID":
+                return UUID.randomUUID().toString();
+            case "DATETIME":
+                return DateTimeUtil.getTimestamp();
+            case "USER_ID":
+                return UserManager.getCurrentUser().getPk_user();
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public Map<String, Object> insertRecord(JSONObject templateFinal) {
+//        JSONObject templateFinal = JSON.parseObject(template);
+        Map<String, Object> insertSQL = getInsertSQL(templateFinal);
+        JdbcTemplate writeTemplate = DatabaseConnections.getWriteTemplate();
+        List<Object> data = (List<Object>) insertSQL.get("data");
+        int count = writeTemplate.update((String) insertSQL.get("sql"), data.toArray());
+        Map<String,Object> result = new HashMap<>();
+        result.put("data","插入成功");
+        result.put("count",count);
+        return result;
+
+    }
+    @Override
+    public Map<String, Object> updateRecord(JSONObject template) {
+        Map<String, Object> insertSQL = getUpdateSQL(template);
+        JdbcTemplate writeTemplate = DatabaseConnections.getWriteTemplate();
+        List<Object> data = (List<Object>) insertSQL.get("data");
+        int count = writeTemplate.update((String) insertSQL.get("sql"), data.toArray());
+        Map<String,Object> result = new HashMap<>();
+        result.put("data","更新成功");
+        result.put("count",count);
+        return result;
+    }
+
+    @Override
+    public JSONObject updateFilters(Map<String, Object> actual, JSONObject template) {
+
+        //获取filters字段
+        JSONArray filters = template.getJSONArray("filters");
+        JSONArray filters_values = new JSONArray();
+        for(int i=0;i<filters.size();i++){
+            JSONObject template_filter = filters.getJSONObject(i);
+            String field = template_filter.getString("field_1");
+            JSONObject object = new JSONObject();
+            object.put("field_1",field);
+            object.put("field_3",template_filter.getString("field_3"));
+            object.put("field_4",template_filter.getString("field_5"));
+            if(actual.containsKey(field)){
+                object.put("field_4",actual.get(field));
+            }else{
+                Object rulesValue = getRulesValue(object, actual);
+                if(rulesValue!=null){
+                    object.put("field_4",rulesValue);
+                }
+            }
+
+            filters_values.add(object);
+        }
+
+        template.put("filters_values",filters_values);
+        return template;
+    }
+
+    private Map<String,Object> getUpdateSQL(JSONObject template){
+        List<String> fields = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        List<String> tmp = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("update "+template.getString("table_name")+" set ");
+        JSONArray fields_values = template.getJSONArray("default_fields");
+       //拼接更新字段
+        for(int i =0;i<fields_values.size();i++){
+            JSONObject jsonObject = fields_values.getJSONObject(i);
+            tmp.add("  "+jsonObject.getString("field_1")+" = ? ");
+            values.add(jsonObject.getString("field_4"));
+        }
+        sql.append(StringJoinUtils.join(tmp,","));
+        JSONArray filters = template.getJSONArray("filters_values");
+
+        //拼接where 条件
+        sql.append(" where ");
+        List<String> filters_tmp = new ArrayList<>();
+        for(int i =0;i<filters.size();i++){
+            JSONObject jsonObject = filters.getJSONObject(i);
+            filters_tmp.add("  "+jsonObject.getString("field_1")+"= ? ");
+            values.add(jsonObject.getString("field_4"));
+        }
+
+        sql.append(StringJoinUtils.join(filters_tmp," and "));
+        Map<String,Object> data = new HashMap<>();
+        data.put("sql",sql.toString());
+        data.put("data",values);
+        if(EnvUtils.isDebugger()){
+            System.out.println(sql.toString());
+            System.out.println(values);
+        }
+        return data;
+
+    }
+    private Map<String,Object> getInsertSQL(JSONObject template){
+        List<String> fields = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        List<String> tmp = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("insert into "+template.getString("table_name")+" (");
+        JSONArray fields_values = template.getJSONArray("default_fields");
+        for(int i =0;i<fields_values.size();i++){
+            JSONObject jsonObject = fields_values.getJSONObject(i);
+            fields.add(jsonObject.getString("field_1"));
+            tmp.add("?");
+            values.add(jsonObject.getString("field_4"));
+        }
+        sql.append(StringJoinUtils.join(fields,","));
+        sql.append(") values (");
+        sql.append(StringJoinUtils.join(tmp,","));
+        sql.append(")");
+        Map<String,Object> data = new HashMap<>();
+        data.put("sql",sql.toString());
+        data.put("data",values);
+        if(EnvUtils.isDebugger()){
+            System.out.println(sql.toString());
+            System.out.println(values);
+        }
+        return data;
+    }
+
+    private Map<String,Object> getSQL(String sql,JSONArray search_fields,JSONArray show_fields){
+
+        List<String> collect = show_fields.stream().map(item -> ((JSONObject)item).getString("field_1")).collect(Collectors.toList());
+        StringBuilder sb = new StringBuilder();
+        StringBuilder count_sb = new StringBuilder();
+        sb.append("select "+StringJoinUtils.join(collect,",")+" from ( ");
+        count_sb.append("select count(*) from (");
+        sb.append( sql+" ) as t ");
+        count_sb.append( sql+" ) as t ");
+        sb.append(" where 1=1 ");
+        count_sb.append(" where 1=1 ");
+        int page = 1;
+        int size = 10;
+        List<Object> data = new ArrayList<>();
+        for (int i = 0;i<search_fields.size();i++){
+            JSONObject o = (JSONObject) search_fields.get(i);
+            String name = o.getString("field_1");
+            String value = o.getString("field_5");
+            if(StringUtils.isEmpty(value)){
+                continue;
+            }
+            if("page".equals(name)){
+                page = Integer.parseInt(value);
+                if(page<=0){
+                    page=1;
+                }
+            }else if( "size".equals(name)){
+                size = Integer.parseInt(value);
+            }else{
+                String operation = o.getString("field_4");
+                String field_sql = "";
+                //根据操作修改字段条件
+                switch (operation){
+                    case "=":
+                        field_sql = "and "+name+" "+operation+" ? ";
+                        break;
+                    case "like":
+                        field_sql = "and "+name+" "+operation+" ? ";
+                        break;
+                    case "in":
+                        List<String> params = Arrays.asList(value.split(",")).stream().map(item -> "?").collect(Collectors.toList());
+                        field_sql = "and "+name+" "+operation+" ("+StringJoinUtils.join(params,",")+")";
+                        break;
+                    case "between_and":
+                        field_sql =  "and ( "+name+" between ? and ? ) ";
+                        break;
+                    case "date_between_and":
+                        field_sql =  "and ( "+name+" between ? and ? ) ";
+                        break;
+
+                }
+                sb.append(field_sql);
+                count_sb.append(field_sql);
+                String type = o.getString("field_3");
+
+
+                if(!StringUtils.isEmpty(type)&& type=="I"){
+                    data.add(Integer.parseInt(value));
+                }else{
+
+                    //根据操作修改value
+                    switch (operation){
+                        case "=":
+                            data.add(value);
+                            break;
+                        case "like":
+                            data.add("%"+value+"%");
+                            break;
+                        case "in":
+                            data.addAll(Arrays.asList(value.split(",")));
+                            break;
+                        case "between_and":
+                            String[] between_and = value.split(",");
+                            data.add(between_and[0]);
+                            if(between_and.length<=1){
+                                data.add(between_and[0]);
+                            }else{
+                                data.add(between_and[1]);
+                            }
+                            break;
+                        case "date_between_and":
+                            String[] date_between_and = value.split(",");
+                            data.add(date_between_and[0]+" 00:00:00");
+                            if(date_between_and.length<=1){
+                                data.add(date_between_and[0]+" 00:00:00");
+                            }else{
+                                data.add(date_between_and[1]+" 23:59:59");
+                            }
+                            break;
+                    }
+
+                }
+
+            }
+
+        }
+        int start = (page-1)*size;
+        sb.append(" limit "+start+" , "+size);
+        Map<String,Object> map = new HashMap<>();
+        map.put("data_sql",sb.toString());
+        map.put("count_sql",count_sb.toString());
+        map.put("sql_data",data);
+        if (EnvUtils.isDebugger()){
+            System.out.println(sb.toString());
+            System.out.println(data);
+        }
+
+        return map;
+    }
+}

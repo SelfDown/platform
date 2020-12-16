@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>采集列表</title>
+    <style type="text/css">
+		ul
+		{
+			list-style:none; /* 去掉ul前面的符号 */
+			margin: 10px; /* 与外界元素的距离为0 */
+			padding: 0px; /* 与内部元素的距离为0 */
+			width: auto; /* 宽度根据元素内容调整 */
+		}
+		ul li
+		{
+			float:left; /* 向左漂移，将竖排变为横排 */
+			margin: 10px
+		}
+		.top{
+			width: 100%
+			height:30%;
+		}
+		.top textarea{
+			width: 100%;
+			height:200px;
+		}
+		.menu {
+			width: 100%;
+			margin-top: 250px;
+			overflow:hidden;
+		}
+		table td{
+			width: 300px
+		}
+		.label_name{
+			width: 400px
+		}
+		.left{
+			width: 60%;
+			float:left;
+
+		}
+		.right{
+			width: 38%;
+			float: right;
+		}
+		.top{
+			position: fixed;
+			width: 60%;
+			z-index:1000
+		}
+		input{
+			width: 420px
+		}
+		.items{
+
+				position: fixed;
+			height: 500px;
+			width: 60%;
+			overflow: auto;
+			padding-bottom: 50px;
+		}
+		.content{
+			overflow: hidden;
+		}
+		.json_item{
+			display: flex;
+			margin-top:5px;
+		}
+		.json_item input{
+			margin-right: 2px
+		}
+		.json_item_button{
+			margin-top: 10px
+		}
+
+		.json_item .small{
+			width: 40px
+		}
+		.test_service .login input{
+			width: 327px
+		}
+		.json_item:hover{
+			background: #444
+		}
+		input:hover{
+			background: #fefefefe;
+
+		}
+		button{
+			cursor:pointer;
+		}
+
+		.field_textarea{
+
+		    width:98%;
+		    height:100px
+
+		}
+
+
+
+
+
+    </style>
+    <script src="vue.js"></script>
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript">
+
+    Array.prototype.indexOf = function (val) {
+	    for (var i = 0; i < this.length; i++) {
+	        if (this[i] == val) return i;
+	    }
+	    return -1;
+	};
+	Array.prototype.remove = function(val) {
+			var index = this.indexOf(val);
+			if (index > -1) {
+				this.splice(index, 1);
+			}
+	};
+
+    </script>
+</head>
+<body>
+<div id="app">
+    <div class="content" id="content">
+        <div class="left" v-if="show_content">
+            <div class="top">
+                <textarea id="info"></textarea>
+                <div class="test_service">
+                    <div class="login">
+                        <input type="" name="" v-model="data.show.username" placeholder="用户名">
+                        <input type="" name="" v-model="data.show.password" placeholder="密码">
+                        <button @click="login">登陆</button>
+                        <button @click="databaseTable">数据字典</button>
+                    </div>
+                    <div class="service">
+                        <label>请求地址：{{data.serviceResultURL}}</label>
+                        <input type="" v-model="data.show.json_data" placeholder="json 字符串">
+                        <button @click="test_service_json">提交</button>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="menu">
+                <ul>
+
+                    <li v-for="item in data.functions">
+                        <a @click="changeTab(item.name)" href="javascript:void(0)">{{item.name}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="items">
+
+
+                <div class="platform">
+                    <button @click="getData">刷新</button>
+                    <button @click="showNewItem">新增 {{data.show.module}} 服务</button>
+
+                </div>
+
+
+                <table style="margin-bottom: 300px">
+                    <thead>
+                    <td>
+                        service
+                    </td>
+
+                    <td>
+                        备注
+                    </td>
+                    <td>
+                        操作
+                    </td>
+                    </thead>
+                    <tbody>
+                    <tr v-for="item in data.show.dataList">
+
+                        <td>
+                            {{item.service}}
+                        </td>
+                        <td>
+                            {{item.backup}}
+                        </td>
+                        <td>
+                            <button @click="showSendJSON(item)">查看json</button>
+                            <button @click="document(item)">查看文档</button>
+                            <button @click="sendJSON(item)">测试</button>
+                            <button @click="showUpdateJSON(item)">修改</button>
+
+                            <button @click="deleteTemplate(item)">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="right">
+
+            <div v-if="data.show.operation !=''">
+                <input style="width: 80px" v-model="enlarge_field"/>
+                <button @click="enlarge"> {{enlarge_message}}</button>
+                <button @click="checkJSON"> json校验</button>
+                <label style="color: red">*</label>必存字段
+                <label style="color: green">*</label>必传字段
+
+                <div id="service" style="height: 600px;overflow-x: hidden;overflow-y: scroll;">
+                    <div v-if="data.show.operation == 'newItem'">新增 {{data.show.module}} 服务 <br/></div>
+                    <div v-if="data.show.operation == 'updateItem'">修改 {{data.show.module}} 服务 <br/></div>
+                    -------------------------------
+
+                    <div v-for="item in data.show.fields">
+                        <div class="label_name" v-if="item.type != 'hidden'">
+                            <label style="color: red" v-if="item.must_save">*</label>
+                            <label style="color: green" v-if="item.must_send">*</label>
+                            {{item.showName}}
+                        </div>
+
+                        <div v-if="item.type == 'array'">
+                            <div v-for="(item_fields,index) in data.show.form_data[item.name]" class="json_item">
+
+                                <input
+                                        class="field_1"
+                                        v-model="item_fields.field_1"
+                                        :placeholder='item_fields.field_1_placeholder'
+                                        :title="item_fields.field_1_placeholder"></input>
+
+                                <input v-model="item_fields.field_2"
+                                       class="small field_2"
+                                       :placeholder='item_fields.field_2_placeholder'
+                                       :title="item_fields.field_2_placeholder"></input>
+
+                                <input v-model="item_fields.field_3"
+                                       class="small field_3"
+                                       :placeholder='item_fields.field_3_placeholder'
+                                       :title='item_fields.field_3'></input>
+
+                                <input v-model="item_fields.field_4"
+                                       class="small field_4"
+                                       :placeholder='item_fields.field_4_placeholder'
+                                       :title='item_fields.field_4'></input>
+
+                                <textarea v-model="item_fields.field_5"
+                                       class="small field_5"
+
+                                       :title="item_fields.field_5_placeholder">
+
+                                </textarea>
+                                <button class="small" @click="upRecord(item.name,index)">上移</button>
+                                <button class="small" @click="downRecord(item.name,index)">下移</button>
+                                <button class="small" @click="removeJSONItem(item.name,item_fields)">删除</button>
+                            </div>
+                            <button class="json_item_button" @click="addNewJSONItem(item.name)">新增Item</button>
+                        </div>
+                        <div v-else-if="item.type == 'textarea'">
+
+
+                            <textarea v-model="data.show.form_data[item.name]"
+                                      class="field_textarea"
+
+                                      :placeholder="item.placeholder"></textarea>
+<!--                            <input :type="item.type" :placeholder="item.placeholder"-->
+<!--                                   v-model="data.show.form_data[item.name]"></input>-->
+                        </div>
+
+                        <div v-else>
+
+                            <input :type="item.type" :placeholder="item.placeholder"
+                                   v-model="data.show.form_data[item.name]"></input>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br/>
+
+                <div>
+
+                </div>
+                <div>
+
+
+                    --------------------------------
+                    <div>
+                        <button type="button" @click="showJSON">查看内容json</button>
+                        <button type="button" @click="save">保存记录</button>
+                    </div>
+
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+	var vm = new Vue({
+	  el: '#app',
+	  data: {
+	  	show_content:true,
+	  	enlarge_field:"field_3",
+	  	enlarge_message:"扩大",
+	  	data:{
+	  		message: 'Hello Vue!',
+	  		show:{
+	  			json_data:"",
+	  			username:"",
+	  			password:"",
+	  			module:"opc",
+	  			operation:"newItem",
+	  			dataList:[],
+	  			fields:[],
+	  			form_data:{}
+
+	  		},
+	  		loginURL:"",
+	  		getDataURL:"",
+	  		saveDataURL:"",
+	  		serviceResultURL:"",
+	  		functions:[
+	  			{
+	  				name:"opc"
+	  			}
+	  		]
+	  	}
+
+	  },
+	  methods:{
+
+	  	 	checkJSON(){
+	  		console.log(this.data.show.form_data)
+	  		addInfo("检查开始！！！")
+	  		var field = this.enlarge_field
+	  		var form_data = this.data.show.form_data
+	  		for (item in form_data){
+
+	  			if (item.indexOf("search_fields")!=-1 && field == 'field_3'){
+	  				continue
+	  			}
+
+	  			if(form_data[item] instanceof Array){
+
+
+	  				for (item_arr in form_data[item]){
+	  					var arr_data = form_data[item][item_arr]
+	  					var field_1 = arr_data["field_1"]
+	  					if(!field_1){
+	  						continue
+	  					}
+
+
+	  					var value = arr_data[field]
+	  					if(!value){
+	  						continue
+	  					}
+	  					try{
+	  						JSON.parse(value)
+	  					}catch(e){
+	  						addInfo("============================================================")
+	  						addInfo("在"+item+" 字段中 "+field_1+" 中的 "+ field+" JSON 转换异常")
+	  						addInfo(value)
+	  						addInfo("-----------------------------------------------------------")
+	  					}
+	  				}
+
+	  			}
+	  		}
+	  		addInfo("检查完毕！！！")
+	  	},
+
+	  	enlarge(){
+
+	  		this.show_content = !this.show_content
+	  		if(!this.show_content){
+	  			this.enlarge_message = "还原"
+	  			document.querySelector(".right").style.width = "90%"
+
+
+	  			var inputs = document.querySelectorAll(".small")
+	  			for(var i=0;i<inputs.length;i++){
+	  				inputs[i].style.width ="20px"
+	  			}
+
+	  			var inputs = document.querySelectorAll("."+this.enlarge_field)
+	  			for(var i=0;i<inputs.length;i++){
+	  				inputs[i].style.width ="800px"
+	  			}
+	  			
+	  		}else{
+	  			this.enlarge_message = "扩大"
+	  			document.querySelector(".right").style.width = "38%"
+
+	  			var inputs = document.querySelectorAll(".small")
+	  			for(var i=0;i<inputs.length;i++){
+	  				inputs[i].style.width ="40px"
+	  			}
+
+	  		}
+
+	  	},
+
+	  	databaseTable(){
+	  		window.location.href = "database_table.html"
+	  	},
+
+	  	login(){
+
+			var login_data = {
+			  "service": "web_login",
+			  "fields": {
+			    "username": this.data.show.username,
+			    "password":this.data.show.password,
+			    "alwaysLogin": "true"
+			  }
+			}
+	  		
+	  		
+	  		$.ajax({
+	    		url:this.data.serviceResultURL,
+	    		contentType: "application/json" ,
+	    		method:"post",
+	    		data:JSON.stringify(login_data),
+	    		dataType:"json",
+	    		success:function(res){
+	    			addInfo(JSON.stringify(res,null,4))
+	    			
+	    		},
+	    		error: function (XMLHttpRequest, textStatus, errorThrown) { 
+	    			addInfo(JSON.stringify(XMLHttpRequest,null,4))
+     				
+ 　　			} 
+
+    		})
+
+	  	},
+	  	swapItems(arr, index1, index2){
+				arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+    			return arr;
+			},
+		upRecord(name,$index){
+			console.log(name)
+			
+			var arr = this.data.show.form_data[name];
+			if($index == 0) {
+  				return;
+			}
+			this.swapItems(arr, $index, $index - 1);
+			this.update_UI()
+		},
+		downRecord(name, $index){
+			console.log(name)
+		
+			var arr = this.data.show.form_data[name];
+			if($index == arr.length -1) {
+  				return;
+			}
+			this.swapItems(arr, $index, $index + 1);
+			this.update_UI()
+		},
+	  	removeJSONItem(name,obj){
+
+	  		if(this.data.show.form_data[name].length<=1){
+	  			alert("至少添加一个！")
+	  			return
+	  		}
+	  		this.data.show.form_data[name].remove(obj)
+	  		this.update_UI()
+	  	},
+	  	update_UI(){
+	  		tmp = this.data.show.operation
+	  		this.data.show.operation=""
+	  		this.data.show.operation=tmp
+	  	},
+
+	  	addNewJSONItem(name){
+	  		
+	  		if(!this.data.show.form_data[name]){
+	  			var copy ={
+		  								"field_1":"delete_flag",
+			  							"field_1_placeholder":"字段名称",
+			  							"field_2":"是否删除",
+			  							"field_2_placeholder":"描述",
+			  							"field_3":"S",
+			  							"field_3_placeholder":"类型 S、I",
+			  							"field_4":"=",
+			  							"field_4_placeholder":"操作 in、=、like、between_and、date_between_and",
+			  							"field_5":"0",
+			  							"field_5_placeholder":"默认值"
+		  							};
+		  		this.data.show.form_data[name] = []
+	  			this.data.show.form_data[name].push(copy)
+	  		}else{
+	  			len = this.data.show.form_data[name].length
+	  			var copy = Object.assign({}, this.data.show.form_data[name][len-1]);
+	  			this.data.show.form_data[name].push(copy)
+	  		}
+	  		
+	  		this.update_UI()
+	  	},
+	  	changeTab(module){
+	  		if(this.data.show.module == module){
+	  			return
+	  		}
+	  		this.data.show.module= module
+	  		this.data.show.operation=""
+	  		this.getData()
+	  		console.log(this.data.show)
+	  	},
+	  	showJSON(){
+	  		addInfo(this.toJSON())
+
+	  	},
+
+
+
+	  	getSendJSON(template){
+		  		var obj ={}
+		  		obj["service"]=template["service"]
+		  		switch(template["service_type"]){
+		  			case "service_platform_query_simple":
+		  			case "service_platform_query":
+		  				var search_fields = template["search_fields"]
+				  		obj["search_fields"]={}
+				  		for(var i=0;i<search_fields.length;i++){
+				  			var field= search_fields[i]
+				  			if(!field["field_1"]){
+				  				continue
+				  			}
+				  			//如果没有默认值，则显示
+			  				var value=field["field_5"]
+			  				if(field['field_3']=="I"){
+			  					if(value){
+			  						obj["search_fields"][field['field_1']]=parseInt(value)
+			  					}else{
+			  						obj["search_fields"][field['field_1']]=0
+			  					}
+			  					
+			  				}else if(field['field_3']=="D"){
+			  					if(value){
+			  						obj["search_fields"][field['field_1']]=parseFloat(value)
+			  					}else{
+			  						obj["search_fields"][field['field_1']]=0
+			  					}
+			  				}else{
+			  					if(value){
+			  						obj["search_fields"][field['field_1']]=value
+			  					}else{
+			  						obj["search_fields"][field['field_1']]=""
+			  					}
+			  					
+			  				}	
+				  		}
+				  		//如果是空的则删除
+				  		if(JSON.stringify(obj["search_fields"])== '{"":""}'){
+				  			delete obj["search_fields"]
+				  		}
+		  				break;
+		  			case "service_version_iteration":
+		  			case "service_platform_login":
+		  			case "service_platform_update":
+		  			case "service_database_connection_config":
+		  			case "service_server_scan":
+		  			case "service_server_login":
+		  			case "service_server_ssh":
+		  			case "service_platform_create":
+		  				var fields = template["fields"]
+				  		obj["fields"]={}
+				  		for(var i=0;i<fields.length;i++){
+				  			var field= fields[i]
+				  			var value = field['field_5']	
+				  			if(field['field_3']=="I"){
+				  				value = parseInt(value)
+				  				if(!value){
+				  					value=value
+				  				}
+				  			}
+				  			if(field['field_3']=="D"){
+				  				value = parseFloat(value)
+				  				if(!value){
+				  					value=0
+				  				}
+				  			}
+				  			obj["fields"][field["field_1"]] = value
+
+				  		}
+
+				  		//如果是空的则删除
+				  		if(JSON.stringify(obj["fields"])== '{"":""}'){
+				  			delete obj["fields"]
+				  		}
+				  		if(template["service_type"]!='service_platform_update'){
+				  			break
+				  		}
+
+				  		var filters = template["filters"]
+				  		obj["filters"]={}
+				  		for(var i=0;i<filters.length;i++){
+				  			var filter= filters[i]
+				  			
+				  			if(!filter["field_4"] && filter["field_5"]){//没有规则 并且 有默认值，不显示
+				  			
+				  				continue;
+				  				
+				  			}
+				  			var value = ""
+				  			if(filter['field_3']=="I"){
+				  				value = parseInt(value)
+				  				if(!value){
+				  					value=0
+				  				}
+				  			}
+				  			if(filter['field_3']=="D"){
+				  				value = parseFloat(value)
+				  				if(!value){
+				  					value=0
+				  				}
+				  			}
+
+				  			obj["filters"][filter["field_1"]] = value
+
+				  		}
+
+		  				break;
+		  		}
+		  		
+		  		
+		  		return obj
+		  		},
+
+
+
+	  	/*getSendJSON(template){
+	  		var obj ={}
+	  		obj["service"]=template["service"]
+	  		switch(template["service_type"]){
+	  			case "service_platform_query":
+	  				var search_fields = template["search_fields"]
+			  		obj["search_fields"]={}
+			  		for(var i=0;i<search_fields.length;i++){
+			  			var field= search_fields[i]
+			  			//如果没有默认值，则显示
+			  			if(!field["field_5"]){
+			  				var value=field["field_5"]
+			  				if(field['field_3']=="I"){
+			  					obj["search_fields"][field['field_1']]=0
+			  				}else{
+			  					obj["search_fields"][field['field_1']]=""
+			  				}	
+			  				
+			  				
+			  			}
+
+			  		}
+			  		//如果是空的则删除
+			  		if(JSON.stringify(obj["search_fields"])== '{"":""}'){
+			  			delete obj["search_fields"]
+			  		}
+	  				break;
+	  			case "service_platform_create":
+
+	  				var fields = template["fields"]
+			  		obj["fields"]={}
+			  		for(var i=0;i<fields.length;i++){
+			  			var field= fields[i]
+			  			var value = ""	
+			  			if(field['field_3']=="I"){
+			  				value = parseInt(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			if(field['field_3']=="D"){
+			  				value = parseFloat(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			obj["fields"][field["field_1"]] = value
+
+			  		}
+	  				break;
+	  			case "service_platform_update":
+	  				var fields = template["fields"]
+			  		obj["fields"]={}
+			  		for(var i=0;i<fields.length;i++){
+			  			var field= fields[i]
+			  			var value = ""
+			  			if(field['field_3']=="I"){
+			  				value = parseInt(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			if(field['field_3']=="D"){
+			  				value = parseFloat(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			obj["fields"][field["field_1"]] = value
+
+			  		}
+			  		//如果是空的则删除
+			  		if(JSON.stringify(obj["fields"])== '{"":""}'){
+			  			delete obj["fields"]
+			  		}
+			  		var filters = template["filters"]
+			  		obj["filters"]={}
+			  		for(var i=0;i<filters.length;i++){
+			  			var filter= filters[i]
+			  			
+			  			if(!filter["field_4"] && filter["field_5"]){//没有规则 并且 有默认值，不显示
+			  			
+			  				continue;
+			  				
+			  			}
+			  			var value = ""
+			  			if(filter['field_3']=="I"){
+			  				value = parseInt(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			if(filter['field_3']=="D"){
+			  				value = parseFloat(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+
+			  			obj["filters"][filter["field_1"]] = value
+
+			  		}
+	  				
+	  				break;
+	  			case "service_platform_login":
+	  				var fields = template["fields"]
+			  		obj["fields"]={}
+			  		for(var i=0;i<fields.length;i++){
+			  			var field= fields[i]
+			  			var value = ""	
+			  			if(field['field_3']=="I"){
+			  				value = parseInt(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			if(field['field_3']=="D"){
+			  				value = parseFloat(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			obj["fields"][field["field_1"]] = value
+
+			  		}
+	  				break
+
+	  			case "service_version_iteration":
+	  				
+	  				var fields = template["fields"]
+			  		obj["fields"]={}
+			  		for(var i=0;i<fields.length;i++){
+			  			var field= fields[i]
+			  			var value = ""	
+			  			if(field['field_3']=="I"){
+			  				value = parseInt(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			if(field['field_3']=="D"){
+			  				value = parseFloat(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			obj["fields"][field["field_1"]] = value
+
+			  		}
+	  				
+	  				var filters = template["filters"]
+			  		obj["filters"]={}
+			  		for(var i=0;i<filters.length;i++){
+			  			var filter= filters[i]
+			  			
+			  			if(!filter["field_4"] && filter["field_5"]){//没有规则 并且 有默认值，不显示
+			  			
+			  				continue;
+			  				
+			  			}
+			  			var value = ""
+			  			if(filter['field_3']=="I"){
+			  				value = parseInt(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  			if(filter['field_3']=="D"){
+			  				value = parseFloat(value)
+			  				if(!value){
+			  					value=0
+			  				}
+			  			}
+			  		}
+
+			  			obj["filters"][filter["field_1"]] = value
+			  				//如果是空的则删除
+			  		if(JSON.stringify(obj["filters"])== '{"":""}'){
+			  			delete obj["filters"]
+			  		}
+	  				
+	  				break;
+	  		}
+	  		
+	  		return obj
+	  	},*/
+	  	deleteTemplate(item){
+	  		if(confirm("确认删除吗？")== false){
+	  			return 
+	  		}
+	  		var service = item["service"]
+	  		var type = item["type"]
+	  		var _that = this
+	  		$.ajax({
+	    		url:this.data.deleteDataURL,
+	    		method:"post",
+	    		data:{"service":service},
+	    		success:function(res){
+	    			addInfo(res)
+	    			_that.getData()
+	    		}
+
+    		})
+	  	},
+	  	showSendJSON(obj){
+	  		var template = JSON.parse(obj["template"])
+	  		var obj = this.getSendJSON(template)
+	  		addInfo(JSON.stringify(obj,null,2))
+	  		return obj
+	  	},
+	  	document(obj){
+	  		console.log(obj)
+	  		window.location.href = "document.html?service="+obj.service
+	  	},
+	  	sendJSON(obj){
+	  		var data = this.showSendJSON(obj);
+	  		data = JSON.stringify(data)
+	  		$.ajax({
+	    		url:this.data.serviceResultURL,
+	    		contentType: "application/json" ,
+	    		method:"post",
+	    		data:data,
+	    		dataType:"json",
+	    		success:function(res){
+	    			addInfo(JSON.stringify(res,null,4))
+	    			
+	    		},
+	    		error: function (XMLHttpRequest, textStatus, errorThrown) { 
+	    			addInfo(JSON.stringify(XMLHttpRequest,null,4))
+     				
+ 　　			} 
+
+    		})
+	  		//window.socket.emit('message',JSON.stringify(data));
+	  	},
+
+	  	test_service_json(){
+	  		var data = this.data.show.json_data
+	  		$.ajax({
+	    		url:this.data.serviceResultURL,
+	    		contentType: "application/json" ,
+	    		method:"post",
+	    		data:data,
+	    		dataType:"json",
+	    		success:function(res){
+	    			addInfo(JSON.stringify(res,null,4))
+	    			
+	    		},
+	    		error: function (XMLHttpRequest, textStatus, errorThrown) { 
+	    			addInfo(JSON.stringify(XMLHttpRequest,null,4))
+     				
+ 　　			} 
+
+    		})
+	  	},
+	  	showUpdateJSON(obj){
+	  		this.showNewItem()
+	  		this.data.show.operation ='updateItem'
+	  		var fields =  this.data.show.fields
+	  		var template = JSON.parse(obj["template"])
+	  		var data = template
+	  		this.data.show.form_data=data
+	  		this.data.show.form_data["backup"] = obj["backup"]
+
+	  	},
+
+	  	//初始化数据
+	  	showNewItem(){
+	  		this.data.show.operation ='newItem'
+	  		this.data.show.form_data={}
+
+	  		var fields =  this.data.show.fields
+	  		for (var i = 0;i<fields.length;i++){
+	  			var item = fields[i]
+	  			//字段初始化数据
+	  			if(item["type"]=='array'){
+	  				if(item["value"]){
+	  					this.data.show.form_data[item['name']] = item["value"]
+	  				}else{
+	  					this.data.show.form_data[item['name']]=[]
+	  				}
+
+	  			}else{
+	  				if(item["value"]){
+	  					this.data.show.form_data[item['name']] = item["value"]
+		  			}else{
+		  				this.data.show.form_data[item['name']] = ""
+		  			}
+	  			}
+
+
+
+	  		}
+	  	},
+	  	save(){
+
+	  		var fields =  this.data.show.fields
+	  		for (var i =0;i< fields.length;i++){
+	  			var item = fields[i]
+	  			if(item.must_save){
+	  				if(!this.data.show.form_data[item['name']]){
+	  					alert(item["name"]+" 不能为空")
+	  					return
+	  				}
+	  			}
+	  			if(item.type=='array'){
+	  				var content_set = new Set()
+	  				var content_data = this.data.show.form_data[item['name']]
+	  				$.each(content_data,function(item,e){
+	  					content_set.add(e["field_1"])
+	  				})
+
+	  				if(content_data.length>content_set.size){
+	  					alert("数组的第一列不能重复")
+	  					return
+	  				}
+	  			}
+	  		}
+
+
+	  		var form = this.data.show.form_data
+	  		var backup = form["backup"]
+	  		delete form["backup"]
+	  		var type = form["type"]
+	  		var service = form["service"]
+	  		var _that = this
+
+	  		var template=form
+			addInfo(JSON.stringify(template))
+
+			var url = ""
+			if(this.data.show.operation == "newItem"){
+				url = this.data.saveDataURL
+			}else{
+				url = this.data.updateDataURL
+			}
+	  		$.ajax({
+				url:url,
+				method:"post",
+				data:{
+					type:type,
+					service:service,
+					backup:backup,
+					template:JSON.stringify(template)
+				},
+				success(res){
+					addInfo(res)
+					_that.getData()
+					form["backup"]=backup
+				}
+			})
+	  	},
+	  	toJSON(){
+	  		return JSON.stringify(this.data.show.form_data,null,4)
+	  	},
+	  	getData(){
+	  		var module = this.data.show.module
+	  	    //获取功能
+	  		var functions = this.data.functions
+	  		//获取字段
+	  		for (var i =0;i< functions.length;i++){
+	  			if(functions[i].name == module){
+	  				this.data.show.fields =functions[i].fields
+	  				break;
+	  			}
+	  		}
+	  		var type = this.data.show.module
+		  	$.ajax({
+	    		url:this.data.getDataURL,
+	    		method:"get",
+	    		data:{"type":type},
+	    		dataType:"json",
+	    		success:function(res){
+	    			console.log(res.data)
+	    			vm.data.show.dataList = res.data
+
+	    		}
+	    	})
+	  	}
+	  },
+	  mounted:function(){
+
+	  	this.data = window.$config.data
+	  	this.getData()
+	  }
+	})
+
+
+	function addInfo(info){
+    		var html=$("#info").val()
+        	$("#info").val(info+"\n\n"+html)
+    }
+
+</script>
+
+
+</body>
+</html>

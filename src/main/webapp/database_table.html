@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>数据字典</title>
+	<style type="text/css">
+
+
+		
+		.exp-title h1 {
+		    font-size: 30px;
+		    color: #333;
+		    font-weight: 400;
+		    line-height: 28px;
+		    font-size: 28px;
+		}
+
+		.exp-content h2 {
+		    font: 400 22px/24px ;
+		    color: #333;
+		    padding-bottom: 7px;
+		    margin: 40px 0 0;
+		    border-bottom: 1px solid #d6d6d8;
+		}
+		.detail {
+			margin-top:10px 
+		}
+		body{
+		
+			padding-left:50px;
+			
+		}
+
+		.tab_head{
+			text-align:left;
+			padding-right:30px;
+			width: 120px 
+		}
+
+
+	</style>
+</head>
+<body>
+
+	<div id="content">
+			<div class="exp-title">
+				<h1>{{backup}}</h1>
+			</div>
+		 	
+			<div v-for="(item,index) in tableList" style="width: 100%">
+				<h4>{{item.backup}} {{item.table_name}}</h4>
+
+				<table>
+					<tr>
+						<td class="tab_head">
+							
+								字段
+							
+						</td>
+
+						<td class="tab_head">
+							描述
+						</td>
+
+						<td class="tab_head">
+							类型
+						</td>
+
+						<td class="tab_head">
+							长度
+						</td>
+						<td class="tab_head">
+							主键
+						</td>
+					</tr>
+
+					<tr v-for="(table_item,next) in item.fields">
+						<td>
+							{{table_item.field_1}}
+						</td>
+						<td>
+							{{table_item.field_2}}
+						</td>
+						<td>
+							{{table_item.field_6}}
+						</td>
+						<td>
+							{{table_item.field_7}}
+						</td>
+
+						<td>
+							
+							<div v-if="table_item.field_4 == 'primary_key'">是</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		
+	
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
+	
+	<script type="text/javascript">
+
+
+
+		var vm = new Vue({
+			el:"#content",
+			data:{
+				backup:"数据字典",
+				tableList:[]
+			},
+			mounted:function(){
+				var type ="database_table"
+				this.getData(type)
+			
+			
+			},
+			methods:{
+
+				getData(type){
+					var _that = this
+					$.ajax({
+			    		url:"/insight/tools/query",
+			    		method:"get",
+			    		data:{type:type},
+			    		dataType:"json",
+			    		success:function(res){
+			    			console.log(res)
+			    			if(res["success"]){
+			    				var data = res["data"]	
+			    				
+			    				if(data){
+			    					_that.tableList = data
+			    					for (var i=0;i<_that.tableList.length;i++){
+			    						var table = _that.tableList[i]
+			    						var template =JSON.parse(table["template"])
+			    						var fields = template["fields"]
+			    						var table_name = template["table_name"]
+			    						for(var j=0;j<fields.length;j++){
+			    							var type_len = fields[j]["field_3"].split(",")
+			    							fields[j]["field_6"] =type_len[0]
+			    							if(type_len.length>=2){
+			   
+			    								fields[j]["field_7"] =type_len[1]
+			    							}
+			    						}
+			    					
+			    						_that.tableList[i]["fields"] = fields
+			    						_that.tableList[i]["table_name"] = table_name
+			    					}
+			    					
+			    				}
+			    			}
+			    			
+			    			
+			    		}
+	    			})
+				}
+			}
+		})
+	</script>
+</body>
+</html>

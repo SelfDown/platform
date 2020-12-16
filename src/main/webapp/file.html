@@ -1,0 +1,25 @@
+<html>
+
+<head>
+
+    <script src="jquery.js"></script>
+</head>
+<body>
+
+<form id="insight_upload" method="post" action="/insight/service/fileUpload" enctype="multipart/form-data">
+    <input type="file" name="file" style="width: 210px">
+    service<input name="service" value="service_file_wlkx_save" style="width: 210px">
+    <input type="submit" value="form insight 文件传">
+</form>
+
+文件下载 /insight/service/download?id= <input id="file_id"/> <button onclick="download_file()">下载</button>
+<script>
+    function download_file(){
+        var file_id = $("#file_id").val();
+        window.location.href = '/insight/service/download?id='+file_id
+    }
+</script>
+</body>
+
+
+</html>

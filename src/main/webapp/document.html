@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>查看文档</title>
+	<style type="text/css">
+
+
+		
+		.exp-title h1 {
+		    font-size: 30px;
+		    color: #333;
+		    font-weight: 400;
+		    line-height: 28px;
+		    font-size: 28px;
+		}
+
+		.exp-content h2 {
+		    font: 400 22px/24px ;
+		    color: #333;
+		    padding-bottom: 7px;
+		    margin: 40px 0 0;
+		    border-bottom: 1px solid #d6d6d8;
+		}
+		.detail {
+			margin-top:10px 
+		}
+		body{
+		
+			padding-left:50px;
+			
+		}
+
+		.tab_head{
+			text-align:right;
+			padding-right:30px;
+			width: 90px 
+		}
+	</style>
+</head>
+<body>
+
+	<div id="content">
+			<div class="exp-title">
+				<h1>{{backup}}</h1>
+			</div>
+			<div class="exp-content">
+				<h2>请求参数</h2>
+			</div>
+
+			<div>
+				
+				<table style="width: 100%">
+					<tr>
+						<td class="tab_head"><h3>请求url：</h3></td>
+						<td>
+							<div  v-if="request_type == 'ajax_json'">
+								/insight/service/result
+							</div>
+
+							<div v-if="request_type == 'form_data'">
+								/insight/service/fileUpload
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tab_head"><h3>method：</h3></td>
+						<td>POST</td>
+					</tr>
+					<tr >
+						<td class="tab_head"><h3>contentType：</h3></td>
+						<td>
+							<div v-if="request_type == 'ajax_json'">
+								application/json
+							</div>
+							<div v-if="request_type == 'form_data'">
+								multipart/form-data
+							</div>
+							
+						</td>
+					</tr>
+
+					<tr >
+						<td class="tab_head"><h3>请求data：</h3></td>
+						<td>
+							
+							<textarea id="data" style="width: 100%;border: none;"></textarea>
+						</td>
+					</tr>
+				</table>
+				
+					
+			</div>
+
+			<div>
+				<h2>参数描述</h2>
+
+				<table style="width: 80%;border: 1px">
+					<thead>
+						<td><h3>字段</h3></td>
+						<td><h3>描述</h3></td>
+						<td><h3>类型</h3></td>
+						<td><h3>必传</h3></td>
+						<td><h3>默认值</h3></td>
+					</thead>
+
+					<tr v-for="item in fields">
+						<td >{{item.field_1}}</td>
+						<td>{{item.field_2}}</td>
+						<td>{{item.field_3}}</td>
+						<td>{{item.field_4}}</td>
+						<td>{{item.field_5}}</td>
+					</tr>
+					
+				</table>
+
+			</div>
+
+			<div>
+				<h2>请求示例</h2>
+
+				<textarea id="example" style="width: 100%;border: none;"></textarea>
+			</div>
+
+
+			<div style="margin-bottom: 100px">
+				<h2>返回参数解释在接口中</h2>
+
+				略
+			</div>
+		</div>
+
+		
+	
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript">
+		
+		function GetQueryString(name)
+		{
+		     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		     var r = window.location.search.substr(1).match(reg);
+		     if(r!=null)return  unescape(r[2]); return null;
+		}
+
+
+
+    
+        
+	
+		var autoTextarea = function (elem, extra, maxHeight) {
+		        extra = extra || 0;
+		        var isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
+		        isOpera = !!window.opera && !!window.opera.toString().indexOf('Opera'),
+		                addEvent = function (type, callback) {
+		                        elem.addEventListener ?
+		                                elem.addEventListener(type, callback, false) :
+		                                elem.attachEvent('on' + type, callback);
+		                },
+		                getStyle = elem.currentStyle ? function (name) {
+		                        var val = elem.currentStyle[name];
+		 
+		                        if (name === 'height' && val.search(/px/i) !== 1) {
+		                                var rect = elem.getBoundingClientRect();
+		                                return rect.bottom - rect.top -
+		                                        parseFloat(getStyle('paddingTop')) -
+		                                        parseFloat(getStyle('paddingBottom')) + 'px';        
+		                        };
+		 
+		                        return val;
+		                } : function (name) {
+		                                return getComputedStyle(elem, null)[name];
+		                },
+		                minHeight = parseFloat(getStyle('height'));
+		 
+		        elem.style.resize = 'none';
+		 
+		        var change = function () {
+		                var scrollTop, height,
+		                        padding = 0,
+		                        style = elem.style;
+		 
+		                if (elem._length === elem.value.length) return;
+		                elem._length = elem.value.length;
+		 
+		                if (!isFirefox && !isOpera) {
+		                        padding = parseInt(getStyle('paddingTop')) + parseInt(getStyle('paddingBottom'));
+		                };
+		                scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+		 
+		                elem.style.height = minHeight + 'px';
+		                if (elem.scrollHeight > minHeight) {
+		                        if (maxHeight && elem.scrollHeight > maxHeight) {
+		                                height = maxHeight - padding;
+		                                style.overflowY = 'auto';
+		                        } else {
+		                                height = elem.scrollHeight - padding;
+		                                style.overflowY = 'hidden';
+		                        };
+		                        style.height = height + extra + 'px';
+		                        scrollTop += parseInt(style.height) - elem.currHeight;
+		                        document.body.scrollTop = scrollTop;
+		                        document.documentElement.scrollTop = scrollTop;
+		                        elem.currHeight = parseInt(style.height);
+		                };
+		        };
+		 
+		        addEvent('propertychange', change);
+		        addEvent('input', change);
+		        addEvent('focus', change);
+		        change();
+		};
+		
+
+        function fillData(){
+        	// var text = document.getElementById("data");
+        	// autoTextarea(text);
+        }
+
+	</script>
+	<script type="text/javascript">
+
+
+		function showData(obj){
+
+			$("#data").val(obj)
+			var text = document.getElementById("data");
+        	autoTextarea(text);
+
+		}
+
+		function showExample(obj){
+			$("#example").val(obj)
+			var text = document.getElementById("example");
+        	autoTextarea(text);
+			
+
+		}
+
+		var vm = new Vue({
+			el:"#content",
+			data:{
+				request_type:"ajax_json",
+				code:"",
+				backup:"",
+				steps:[
+					
+
+				],
+				fields:[],
+				request_example:{
+					url:"/insight/service/result",
+					contentType:"application/json",
+					method:"POST",
+					data:"请求data 的字符串内容",
+					sucess:"..."
+				}
+			},
+			mounted:function(){
+				var service = GetQueryString("service")
+				if(service){
+					this.getData(service)
+				}else{
+					console.log("service 不能为空")
+				}
+
+
+				
+			},
+			methods:{
+				getFields(template){
+					var obj =[]
+
+		  			switch(template["service_type"]){
+		  				case "service_platform_query_simple":
+		  				case "service_platform_query":
+		  					obj =template["search_fields"]
+		  					break;
+
+		  				case "service_platform_create":
+		  				case "service_platform_login":
+		  				case "service_version_iteration":
+		  				case "service_database_connection_config":
+		  				case "service_platform_update":
+		  					 obj=template["fields"]
+
+		  					 if(template["service_type"] == 'service_platform_update'){
+		  					 	obj = obj.concat(template["filters"])
+		  					 }
+		  					 break
+		  				case "service_file_upload_save":
+		  					obj.push({"field_1":"service","field_2":"service 名称","field_3":"S,must"})
+		  					obj.push({"field_1":"file","field_2":"文件数组","field_3":"Array,must"})
+		  					
+
+		  			}
+
+		  			obj.map(item=>{
+		  				var arr = item["field_3"].split(",")
+		  				item["field_3"] = arr[0]
+		  				if(arr[1]){
+		  					item["field_4"] = "是"
+		  				}else{
+		  					item["field_4"] = "否"
+		  				}
+		  			})
+		  			return obj;
+
+				},
+
+				getSendJSON(template){
+		  		var obj ={}
+		  		obj["service"]=template["service"]
+		  		switch(template["service_type"]){
+		  			case "service_platform_query_simple":
+		  			case "service_platform_query":
+		  				var search_fields = template["search_fields"]
+				  		obj["search_fields"]={}
+				  		for(var i=0;i<search_fields.length;i++){
+				  			var field= search_fields[i]
+				  			if(!field["field_1"]){
+				  				continue
+				  			}
+				  			//如果没有默认值，则显示
+			  				var value=field["field_5"]
+			  				if(field['field_3']=="I"){
+			  					if(value){
+			  						obj["search_fields"][field['field_1']]=parseInt(value)
+			  					}else{
+			  						obj["search_fields"][field['field_1']]=0
+			  					}
+			  					
+			  				}else if(field['field_3']=="D"){
+			  					if(value){
+			  						obj["search_fields"][field['field_1']]=parseFloat(value)
+			  					}else{
+			  						obj["search_fields"][field['field_1']]=0
+			  					}
+			  				}else{
+			  					if(value){
+			  						obj["search_fields"][field['field_1']]=value
+			  					}else{
+			  						obj["search_fields"][field['field_1']]=""
+			  					}
+			  					
+			  				}	
+				  		}
+				  		//如果是空的则删除
+				  		if(JSON.stringify(obj["search_fields"])== '{"":""}'){
+				  			delete obj["search_fields"]
+				  		}
+		  				break;
+		  			case "service_version_iteration":
+		  			case "service_platform_login":
+		  			case "service_platform_update":
+		  			case "service_database_connection_config":
+		  			case "service_platform_create":
+		  				var fields = template["fields"]
+				  		obj["fields"]={}
+				  		for(var i=0;i<fields.length;i++){
+				  			var field= fields[i]
+				  			var value = field['field_5']	
+				  			if(field['field_3']=="I"){
+				  				value = parseInt(value)
+				  				if(!value){
+				  					value=value
+				  				}
+				  			}
+				  			if(field['field_3']=="D"){
+				  				value = parseFloat(value)
+				  				if(!value){
+				  					value=0
+				  				}
+				  			}
+				  			obj["fields"][field["field_1"]] = value
+
+				  		}
+
+				  		//如果是空的则删除
+				  		if(JSON.stringify(obj["fields"])== '{"":""}'){
+				  			delete obj["fields"]
+				  		}
+				  		if(template["service_type"]!='service_platform_update'){
+				  			break
+				  		}
+
+				  		var filters = template["filters"]
+				  		obj["filters"]={}
+				  		for(var i=0;i<filters.length;i++){
+				  			var filter= filters[i]
+				  			
+				  			if(!filter["field_4"] && filter["field_5"]){//没有规则 并且 有默认值，不显示
+				  			
+				  				continue;
+				  				
+				  			}
+				  			var value = ""
+				  			if(filter['field_3']=="I"){
+				  				value = parseInt(value)
+				  				if(!value){
+				  					value=0
+				  				}
+				  			}
+				  			if(filter['field_3']=="D"){
+				  				value = parseFloat(value)
+				  				if(!value){
+				  					value=0
+				  				}
+				  			}
+
+				  			obj["filters"][filter["field_1"]] = value
+
+				  		}
+
+		  				break;
+		  		}
+		  		
+		  		
+		  		return obj
+		  		},
+				getData(service){
+					var _that = this
+					$.ajax({
+			    		url:"/insight/tools/queryService",
+			    		method:"get",
+			    		data:{service:service},
+			    		dataType:"json",
+			    		success:function(res){
+			    			console.log(res)
+			    			if(res["success"]){
+			    				var data = res["data"]	
+			    				if(data){
+			    					_that.code = data.code
+			    					_that.backup = data.backup
+			    					document.title = data.backup
+			    					console.log(data.type)
+			    					var final_template = JSON.parse(data.template)
+			    					if(data.type.indexOf("file")!=-1){
+			    						_that.request_type = 'form_data'
+			    						var data_service = {
+			    							"file":["文件对象数组..."],
+			    							"service":data.service
+			    						}
+			    						showData(JSON.stringify(data_service,null,4))
+			    						_that.fields = _that.getFields(final_template)
+			    						var sb = "var file = $('#file').prop('files')[0];\n"
+			    						sb += "var form = new FormData();\n"
+			    						sb +="form.append('service','"+data.service+"');\n"
+			    						sb +="form.append('file', file,file.name);\n"
+			    						sb +="form.append('file', file2,file2.name);\n"
+
+			    						var tmp = {
+								                url:"/insight/service/fileUpload",
+								                type:"post",
+								                data:"form 变量",
+								                processData:false,
+								                contentType:false,
+								                success:"..."
+										}
+										sb+="$.ajax("+JSON.stringify(tmp,null,4)+")"
+			    						showExample(sb)
+			    					}else{
+			    						
+				    					var template = _that.getSendJSON(final_template)
+				    					showData(JSON.stringify(template,null,4))
+				    					_that.fields = _that.getFields(final_template)
+				    					
+				    					showExample("$.ajax("+JSON.stringify(_that.request_example,null,4)+")")
+			    					}
+			    					
+			    				}
+			    			}
+			    			
+			    			
+			    		}
+	    			})
+				}
+			}
+		})
+	</script>
+</body>
+</html>

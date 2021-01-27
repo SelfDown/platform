@@ -22,10 +22,17 @@ public class ApiServiceImpl implements ApiService{
     public boolean saveApi(ApiModel api) {
         Connection conn = SqliteUtils.getConn();
         try {
-            Statement statement = conn.createStatement();
-            String format = String.format("insert into collection_list(id,type,service,template,backup) values('%s','%s','%s','%s','%s')",System.currentTimeMillis()+"",api.getType(),api.getService(),api.getTemplate(),api.getBackup() );
-            boolean resultSet = statement.execute(format);
-            statement.close();
+            PreparedStatement preparedStatement = conn.prepareStatement("insert into collection_list(id,type,service,template,backup) values(?,?,?,?,?)");
+            preparedStatement.setLong(1,System.currentTimeMillis());
+            preparedStatement.setString(2,api.getType());
+            preparedStatement.setString(3,api.getService());
+            preparedStatement.setString(4,api.getTemplate());
+            preparedStatement.setString(5,api.getBackup());
+//            String format = String.format("insert into collection_list(id,type,service,template,backup) values('%s','%s','%s','%s','%s')",System.currentTimeMillis()+"",
+//                    api.getType(),api.getService(),api.getTemplate(),api.getBackup() );
+            boolean resultSet = preparedStatement.execute();
+
+            preparedStatement.close();
             return true;
 
         } catch (SQLException e) {
@@ -118,10 +125,14 @@ public class ApiServiceImpl implements ApiService{
     public boolean updateApi(ApiModel api) {
         Connection conn = SqliteUtils.getConn();
         try {
-            Statement statement = conn.createStatement();
-            String format = String.format("update collection_list set backup='%s',template= '%s' where service = '%s' ",api.getBackup() ,api.getTemplate(),api.getService());
-            boolean resultSet = statement.execute(format);
-            statement.close();
+            PreparedStatement preparedStatement = conn.prepareStatement("update collection_list set backup=?,template= ? where service = ?");
+
+            preparedStatement.setString(1,api.getBackup());
+            preparedStatement.setString(2,api.getTemplate());
+            preparedStatement.setString(3,api.getTemplate());
+//            String format = String.format("update collection_list set backup='%s',template= '%s' where service = '%s' ",api.getBackup() ,api.getTemplate(),api.getService());
+            boolean resultSet = preparedStatement.execute();
+            preparedStatement.close();
             return true;
 
         } catch (SQLException e) {

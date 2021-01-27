@@ -51,11 +51,7 @@
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.beetl/beetl-core -->
-        <dependency>
-            <groupId>org.beetl</groupId>
-            <artifactId>beetl-core</artifactId>
-            <version>2.2.1</version>
-        </dependency>
+
 
 
 
@@ -121,6 +117,11 @@
             <artifactId>spring-boot-maven-plugin</artifactId>
             <version>2.1.5.RELEASE</version>
         </dependency>
+                <dependency>
+                    <groupId>org.beetl</groupId>
+                    <artifactId>beetl-core</artifactId>
+                    <version>2.2.5</version>
+                </dependency>
 
 
 

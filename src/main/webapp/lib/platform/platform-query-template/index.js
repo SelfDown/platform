@@ -80,7 +80,7 @@ var _config =   {
 
               {
                 showName:'搜索字段',
-                name:"search_fields",
+                name:"fields",
                 must_send:false,
                 must_save:false,
                 type:"array",
@@ -129,7 +129,7 @@ var _config =   {
 
               {
                 showName:'默认搜索字段',
-                name:"default_search_fields",
+                name:"default_fields",
                 must_send:false,
                 must_save:false,
                 type:"array",

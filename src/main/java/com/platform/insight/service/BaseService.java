@@ -3,6 +3,7 @@ package com.platform.insight.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.platform.insight.model.ApiModel;
+import com.platform.insight.model.PlatformTemplate;
 import com.platform.insight.utils.OperationUtils;
 import com.platform.insight.utils.ResultUtils;
 import com.platform.insight.utils.SpringUtils;
@@ -37,7 +38,7 @@ public class BaseService {
         }
 
         String template_final = apiModel.getTemplate();
-        JSONObject final_template = JSON.parseObject(template_final);
+        JSONObject final_template = PlatformTemplate.parseObject(template_final);
         String service_type = final_template.getString("service_type");//获取类型
         Result api = null;
         try{

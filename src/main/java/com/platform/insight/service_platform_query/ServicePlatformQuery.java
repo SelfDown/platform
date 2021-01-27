@@ -163,7 +163,7 @@ public class ServicePlatformQuery extends ResultBaseService implements  ApiServi
         return template;
     }
 
-    private boolean hasField(String field,JSONArray target){
+    protected boolean hasField(String field,JSONArray target){
         for(int i=0;i<target.size();i++){
             if(target.getJSONObject(i).getString("field_1").equals(field)){
                 return true;

@@ -60,7 +60,7 @@ public class ServicePlatformQuerySimple  extends ServicePlatformQuery {
         updateSearchFields((Map<String, Object>) actual.get("search_fields"), final_template);
         //获取sql 对象
         Map<String, Object> sqlObject = databaseFactory.getSQLObject(final_template);
-        //获取最终 sql
+        //获取最终 sql0.0.........
         Map<String, Object> sqlBuilder = databaseFactory.buildSQL(sqlObject);
         //如果是预览sql
         String preview = final_template.getString("preview");

@@ -108,6 +108,20 @@ public class ServiceUtils {
     }
 
     /**
+     *  判断是否为空值，
+     *  没有key。或者有key ，但是值是空
+     * @param actual
+     * @param field
+     * @return
+     */
+    protected boolean isEmptyFieldValue(Map<String, Object> actual, String field){
+        if (actual == null || !actual.containsKey(field) || StringUtils.isEmpty(actual.get(field) + "")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param actual
      * @param field
      * @return 空的就返回对象，否则返回null
@@ -151,6 +165,17 @@ public class ServiceUtils {
             return value.substring(1, value.length() - 1);
         }
         return null;
+    }
+
+
+    public static Object getBeanByName(String name){
+        try {
+            return SpringUtils.getBean(name);
+        }catch (Exception e){
+            return null;
+        }
+
+
     }
 
 

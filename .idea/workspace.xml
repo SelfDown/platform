@@ -2,31 +2,40 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c760e50a-f524-465c-aef9-9439563d3309" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/check/BaseCheck.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/check/PlatformCheck.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/filters/BaseFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/filters/PlatformFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/PlatformTemplate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/Const.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ServiceUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/test/filter_test.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/test/test.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/TemplateItemArr.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/TemplateItemObj.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/filters/BaseFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/rule_value/BaseRuleValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/rule_value/RuleValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/rule_value/imp/StringRuleValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/log/PlatformLog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/log/PlatformLogImp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/database.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hs_err_pid14980.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hs_err_pid8240.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/null" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/DatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/factory/database/DatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/api/ApiController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/check/BaseCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/check/BaseCheck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/check/PlatformCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/check/PlatformCheck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/filters/BaseFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/filters/PlatformFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/filters/PlatformFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/PlatformTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/model/PlatformTemplate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ApiServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ApiServiceImpl.java.tmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/Result.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_connection_config/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_database_connection_config/ApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query/ServicePlatformQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query/ServicePlatformQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_simple/ServicePlatformQuerySimple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_simple/ServicePlatformQuerySimple.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_template/ServicePlatformQueryTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/service_platform_query_template/ServicePlatformQueryTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/StringTemplateUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/StringTemplateUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/Const.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/Const.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ResultUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ResultUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ServiceUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/insight/utils/ServiceUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platform/test/filter_test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platform/test/filter_test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/insight-api.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/insight-api.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/lib/platform/platform-query-template/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/lib/platform/platform-query-template/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/sql-api-1.0-SNAPSHOT.jar" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +96,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.filter_test">
+  <component name="RunManager" selected="Application.Application">
     <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.platform.Application" />
       <module name="sql-api" />
@@ -168,10 +177,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.filter_test" />
-        <item itemvalue="Application.test" />
         <item itemvalue="Application.Application" />
+        <item itemvalue="Application.filter_test" />
         <item itemvalue="Maven.sql-api [clean,install]" />
+        <item itemvalue="Application.test" />
         <item itemvalue="Application.StringTemplateUtils" />
       </list>
     </recent_temporary>
@@ -244,39 +253,19 @@
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java</url>
-          <line>49</line>
-          <option name="timeStamp" value="66" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/filters/BaseFilter.java</url>
+          <line>54</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java</url>
-          <line>63</line>
-          <option name="timeStamp" value="67" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/filters/BaseFilter.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java</url>
-          <line>585</line>
-          <option name="timeStamp" value="68" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java</url>
-          <line>56</line>
-          <option name="timeStamp" value="69" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/BaseService.java</url>
-          <line>57</line>
-          <option name="timeStamp" value="70" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java</url>
-          <line>491</line>
-          <option name="timeStamp" value="71" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/service/ResultBaseService.java</url>
-          <line>490</line>
-          <option name="timeStamp" value="72" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/platform/insight/platform_tool/filters/BaseFilter.java</url>
+          <line>51</line>
+          <option name="timeStamp" value="94" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

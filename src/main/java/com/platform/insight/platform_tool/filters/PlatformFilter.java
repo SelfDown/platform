@@ -1,4 +1,4 @@
-package com.platform.insight.filters;
+package com.platform.insight.platform_tool.filters;
 
 import com.platform.insight.model.PlatformTemplate;
 

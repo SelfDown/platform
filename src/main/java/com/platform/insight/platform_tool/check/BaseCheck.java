@@ -1,4 +1,4 @@
-package com.platform.insight.check;
+package com.platform.insight.platform_tool.check;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -16,6 +16,9 @@ import java.util.*;
 @Service(BaseCheck.ID)
 public class BaseCheck extends ServiceUtils implements PlatformCheck {
     public static final String ID = "base_check";
+    public static PlatformCheck getCheckBean(String check){
+        return (PlatformCheck) getBeanByName(check);
+    }
 
     @Override
     public Map<String, Object> check(Map<String, Object> actual, JSONObject final_template, boolean is_http) {

@@ -8,6 +8,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.platform.insight.data_source.DatabaseConnections;
 import com.platform.insight.factory.database.DatabaseFactory;
 import com.platform.insight.model.ApiModel;
+import com.platform.insight.model.PlatformTemplate;
+import com.platform.insight.model.TemplateItemArr;
+import com.platform.insight.model.TemplateItemObj;
+import com.platform.insight.platform_tool.check.BaseCheck;
+import com.platform.insight.platform_tool.check.PlatformCheck;
+import com.platform.insight.platform_tool.filters.BaseFilter;
+import com.platform.insight.platform_tool.filters.PlatformFilter;
 import com.platform.insight.service_platform_query.ServicePlatformQuery;
 import com.platform.insight.utils.*;
 import org.apache.shiro.authz.UnauthenticatedException;
@@ -20,7 +27,7 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
     List<MultipartFile> files = null;
     private long count = 0;
     private String day = "";
-    private JSONObject final_template;
+    private PlatformTemplate final_template;
 
     protected ApiModel getApiModel(String service) {
         ApiService api = SpringUtils.getBean(com.platform.insight.service.ApiService.ID);
@@ -33,10 +40,10 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
      * @param service 服务名称
      * @return
      */
-    protected JSONObject getFinalTemplate(String service) {
+    protected PlatformTemplate getFinalTemplate(String service) {
         ApiModel apiModel = getApiModel(service);
         String template_final = apiModel.getTemplate();
-        JSONObject final_template = JSON.parseObject(template_final);
+        PlatformTemplate final_template = PlatformTemplate.parseTemplate(template_final);
         return final_template;
     }
 
@@ -47,12 +54,12 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
      */
 
     @Override
-    public JSONObject getFinalTemplate() {
+    public PlatformTemplate getFinalTemplate() {
         return final_template;
     }
 
     @Override
-    public void setFinalTemplate(JSONObject finalTemplate) {
+    public void setFinalTemplate(PlatformTemplate finalTemplate) {
         this.final_template = finalTemplate;
     }
 
@@ -316,7 +323,6 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
     }
 
 
-
     /**
      * @param actual
      * @param field
@@ -347,7 +353,6 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
         }
         return null;
     }
-
 
 
     /**
@@ -481,51 +486,79 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
     }
 
 
+    private void serviceLog(String msg) {
+        PlatformTemplate finalTemplate = getFinalTemplate();
 
+        finalTemplate.log("=======================" + msg + "========================");
+    }
 
+    private void serviceDetailLog(String name, String msg) {
+        PlatformTemplate finalTemplate = getFinalTemplate();
+        finalTemplate.log("【" + name + "】" + msg);
+    }
 
+    /**
+     * 检查和替换参数
+     *
+     * @param actual        前台传的参数
+     * @param finalTemplate 后台模板
+     * @param is_http       是否是http,内部调用
+     * @return
+     */
     @Override
-    public Map<String, Object> check(Map<String, Object> actual, JSONObject final_template, boolean is_http) {
+    public Map<String, Object> check(Map<String, Object> actual, PlatformTemplate finalTemplate, boolean is_http) {
 
+        this.serviceLog("检查数据开始");
+        TemplateItemArr checks = finalTemplate.getChecks();
+        for (int i = 0; i < checks.size(); i++) {
 
-        String login_require = final_template.getString("login_require");
-        //是否需要登陆,为false 不要登陆
-        if (!"false".equals(login_require)) {
-            String currentUser = UserManager.getCurrentPkUser();
-            if (currentUser == null) {
-                throw new UnauthenticatedException();
+            TemplateItemObj templateItemObj = checks.getTemplateItemObj(i);
+            String check_rule_bean = (String) templateItemObj.getField_5();
+//            finalTemplate.log("【" + check_rule_bean + "】");
+            this.serviceDetailLog(check_rule_bean, "正在检查数据");
+            PlatformCheck checkBean = BaseCheck.getCheckBean(check_rule_bean);
+            if (checkBean == null) {
+
+                String msg = "检查数据对象：【" + check_rule_bean + "】不存在,请核对配置";
+                finalTemplate.log(msg);
+                return ResultUtils.getResultMap(false, msg);
             }
+            Map<String, Object> checkResult = checkBean.check(actual, finalTemplate, is_http);
+            //如果失敗了，直接返回
+            if (!ResultUtils.isSuccess(checkResult)) {
+                finalTemplate.log(checkResult);
+                return checkResult;
+            }
+
+
         }
 
-        String action_type = final_template.getString("action_type");
-        if (is_http && !StringUtils.isEmpty(action_type) && !"http".equals(action_type)) {
-
-            return ResultUtils.getResultMap(false, "不支持 http 访问");
-        }
-        //默认检查fields 字段
-        if (actual.get("fields") == null) {
-            actual.put("fields", new HashMap<>());
-        }
-        //默认获取default_fields 字段
-        JSONArray default_fields = final_template.getJSONArray("default_fields");
-        if (default_fields == null) {
-            final_template.put("default_fields", new JSONArray());
-        }
-
-        Map<String, Object> map = checkFields((Map<String, Object>) actual.get("fields"), final_template.getJSONArray("fields"), final_template);
-        //检查状态是否成功
-        String msg = null;
-        if (!(boolean) map.get("success")) {
-
-            return map;
-        }
+        this.serviceLog("检查数据结束");
         return ResultUtils.getResultMap(true, "检查成功");
+
     }
 
     @Override
     public Map<String, Object> prepare(Map<String, Object> actual) {
+        this.serviceLog("整合数据开始");
+        PlatformTemplate finalTemplate = getFinalTemplate();
+        TemplateItemArr filters = finalTemplate.getFilters();
+        for (int i = 0; i < filters.size(); i++) {
+            TemplateItemObj templateItemObj = filters.getTemplateItemObj(i);
+            String filter_rule_bean = (String) templateItemObj.getField_5();
+            this.serviceDetailLog(filter_rule_bean, "正在整合数据");
+            PlatformFilter filterBean = BaseFilter.getFilterBean(filter_rule_bean);
+            if (filterBean == null) {
+                String msg = "整合数据对象：" + filter_rule_bean + "不存在，请核对配置";
+                finalTemplate.log(msg);
+                return ResultUtils.getResultMap(false, msg);
+            }
+            filterBean.filter(actual, finalTemplate);
 
-        updateFields((Map<String, Object>) actual.get("fields"), getFinalTemplate());
+        }
+        this.serviceLog("整合数据结束");
+
+//        updateFields((Map<String, Object>) actual.get("fields"), getFinalTemplate());
         return getResult(true, "处理成功");
     }
 

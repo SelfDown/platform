@@ -1,6 +1,7 @@
 package com.platform.insight.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.platform.insight.model.PlatformTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface Result {
      * @param is_http 是否是http,内部调用
      * @return
      */
-    Map<String,Object> check(Map<String,Object> actual,JSONObject final_template,boolean is_http);
+    Map<String,Object> check(Map<String,Object> actual, PlatformTemplate final_template, boolean is_http);
 
     /**
      *  预处理，
@@ -39,8 +40,8 @@ public interface Result {
     Map<String,Object> finish(JSONObject final_template);
 
 
-    JSONObject getFinalTemplate();
-    void setFinalTemplate(JSONObject finalTemplate);
+    PlatformTemplate getFinalTemplate();
+    void setFinalTemplate(PlatformTemplate finalTemplate);
 
     void setFileList(List<MultipartFile> files);
     List<MultipartFile> getFileList();

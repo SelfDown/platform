@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>sql-api</groupId>
     <artifactId>sql-api</artifactId>
@@ -13,9 +14,8 @@
         <mojarra.version>2.3.4</mojarra.version>
 
 
-
     </properties>
-    
+
 
     <dependencies>
 
@@ -36,25 +36,20 @@
         </dependency>
 
 
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-tomcat</artifactId>-->
+        <!--            <version>1.5.9.RELEASE</version>-->
+        <!--            &lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-tomcat</artifactId>-->
-<!--            <version>1.5.9.RELEASE</version>-->
-<!--            &lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.apache.tomcat.embed</groupId>-->
-<!--            <artifactId>tomcat-embed-jasper</artifactId>-->
-<!--            <version>8.5.28</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.tomcat.embed</groupId>-->
+        <!--            <artifactId>tomcat-embed-jasper</artifactId>-->
+        <!--            <version>8.5.28</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.beetl/beetl-core -->
-
-
-
-
 
 
         <dependency>
@@ -72,7 +67,6 @@
             <artifactId>spring-jdbc</artifactId>
             <version>4.3.12.RELEASE</version>
         </dependency>
-
 
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -117,13 +111,13 @@
             <artifactId>spring-boot-maven-plugin</artifactId>
             <version>2.1.5.RELEASE</version>
         </dependency>
-                <dependency>
-                    <groupId>org.beetl</groupId>
-                    <artifactId>beetl-core</artifactId>
-                    <version>2.2.5</version>
-                </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/org.beetl/beetl-core -->
+        <dependency>
+            <groupId>org.beetl</groupId>
+            <artifactId>beetl-core</artifactId>
+            <version>2.2.3</version>
+        </dependency>
 
 
     </dependencies>

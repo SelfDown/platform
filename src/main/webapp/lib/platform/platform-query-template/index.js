@@ -152,6 +152,60 @@ var _config =   {
 
                     ]
               },
+
+
+                {
+                              showName:'检查器',
+                              name:"checks",
+                              must_send:false,
+                              must_save:false,
+                              type:"array",
+                              placeholder:"搜索字段",
+                              value:[
+
+                                  {
+                                    "field_1":"base_check",
+                                    "field_1_placeholder":"字段名称",
+                                    "field_2":"基础检查",
+                                    "field_2_placeholder":"描述",
+                                    "field_3":"S",
+                                    "field_3_placeholder":"类型 S、I",
+                                    "field_4":'',
+                                    "field_4_placeholder":"",
+                                    "field_5":"base_check",
+                                    "field_5_placeholder":"默认值"
+                                  },
+
+
+                                  ]
+                            },
+
+                 {
+                  showName:'过滤器',
+                  name:"filters",
+                  must_send:false,
+                  must_save:false,
+                  type:"array",
+                  placeholder:"搜索字段",
+                  value:[
+
+                      {
+                        "field_1":"base_filter",
+                        "field_1_placeholder":"字段名称",
+                        "field_2":"基础过滤",
+                        "field_2_placeholder":"描述",
+                        "field_3":"S",
+                        "field_3_placeholder":"类型 S、I",
+                        "field_4":'',
+                        "field_4_placeholder":"",
+                        "field_5":"base_filter",
+                        "field_5_placeholder":"默认值"
+                      },
+
+
+                      ]
+                 },
+
                 {
                   showName:"data_sql,显示数据SQL",
                   name:"data_sql",

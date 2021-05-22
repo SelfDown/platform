@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.platform.insight.factory.database.DatabaseFactory;
+import com.platform.insight.model.PlatformTemplate;
 import com.platform.insight.service_platform_query.ServicePlatformQuery;
+import com.platform.insight.utils.Const;
 import com.platform.insight.utils.EnvUtils;
+import com.platform.insight.utils.ResultUtils;
 import com.platform.insight.utils.StringTemplateUtils;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
@@ -22,9 +25,10 @@ import java.util.*;
 @Service(ServicePlatformQueryTemplate.ID)
 public class ServicePlatformQueryTemplate extends ServicePlatformQuery {
     public static final String ID = "service_platform_query_template";
+
     @Override
-    public Map<String,Object> check(Map<String,Object> actual,JSONObject final_template,boolean is_http){
-        Map<String,Object> r = super.check(actual,final_template,is_http);
+    public Map<String, Object> check(Map<String, Object> actual, PlatformTemplate final_template, boolean is_http) {
+        Map<String, Object> r = super.check(actual, final_template, is_http);
         return r;
     }
 
@@ -33,28 +37,37 @@ public class ServicePlatformQueryTemplate extends ServicePlatformQuery {
     public Map<String, Object> result(Map<String, Object> actual) {
 
         //获取数据模板，已经处理过的
-        JSONObject final_template = getFinalTemplate();
+        PlatformTemplate finalTemplate = getFinalTemplate();
         //获取数据库工厂
         Map<String, Object> databaseFactoryInfo = getDatabaseFactory();
+
         //检查是否支持，改数据库类型
-        boolean success = (boolean) databaseFactoryInfo.get("success");
-        if (!success) {
+
+        if (!isSuccess(databaseFactoryInfo)) {
             return databaseFactoryInfo;
         }
         //获取对应的数据库工厂
         DatabaseFactory databaseFactory = (DatabaseFactory) databaseFactoryInfo.get("data");
+        Map<String, Object> req_params = finalTemplate.getDefaultFieldsDict();
+        finalTemplate.log(req_params);
 
         Map<String, Object> result = getResult(true, "查询成功");
 
+//
 
-        Map<String, Object> data = getDictFields(final_template, "search_fields");
-        String data_sql = final_template.getString("data_sql");
-        Map<String, Object> sqlBuilder = buildSQL(data_sql, data);
-        String sql = (String) sqlBuilder.get("sql");
-        List<Object> params = (List<Object>) sqlBuilder.get("data");
+        String data_sql = finalTemplate.getDataSQL();
+        Map<String, Object> sqlBuilder = buildSQL(data_sql, req_params);
+
+
+        String sql = (String) sqlBuilder.get(Const.SQL);
+        List<Object> params = (List<Object>) sqlBuilder.get(Const.DATA);
+
+        if (EnvUtils.isDebugger()) {
+            finalTemplate.log(sqlBuilder);
+        }
         List<Map<String, Object>> listResult = databaseFactory.getListResult(sql, params);
-        result.put("data", listResult);
-        result.put("success", true);
+
+        return ResultUtils.getResultMap(true,"查询成功",listResult);
         //如果是预览sql
 
 //        String preview = final_template.getString("preview");
@@ -73,36 +86,9 @@ public class ServicePlatformQueryTemplate extends ServicePlatformQuery {
 //            e.printStackTrace();
 //        }
 //        result = databaseFactory.getSQLResult(sqlBuilder);
-        return result;
+//        return result;
     }
 
-    @Override
-    public JSONObject updateFields(Map<String, Object> actual, JSONObject template) {
-        super.updateFields(actual, template);
-        JSONArray search_fields = template.getJSONArray("search_fields");
-        for (int i = 0; i < search_fields.size(); i++) {
-            JSONObject o = search_fields.getJSONObject(i);
-            String field = o.getString("field_1");
-            String field_4 = o.getString("field_4");
-            String operation = "";
-            //判断规则字段
-            if (!StringUtils.isEmpty(field_4)) {
-                try {
-                    JSONObject r = JSONObject.parseObject(field_4);
-                    operation = r.getString("operation");
-                } catch (Exception e) {
-
-                }
-                Object value = o.getString("field_5");
-                value = getOperationValue(value, operation);
-                o.put("field_5", value);
-
-            }
-
-        }
-
-        return template;
-    }
 
     public String beetlString(String blSql, Map<String, Object> data, String key_type) {
         //new一个模板资源加载器
@@ -181,12 +167,9 @@ public class ServicePlatformQueryTemplate extends ServicePlatformQuery {
         List<Object> data_list = StringTemplateUtils.getOrderParams(keySQL, data);
 
 
-        build.put("sql", sql);
-        build.put("data", data_list);
-        if (EnvUtils.isDebugger()) {
-            System.out.println(sql);
-            System.out.println(data_list);
-        }
+        build.put(Const.SQL, sql);
+        build.put(Const.DATA, data_list);
+
         return build;
 
     }

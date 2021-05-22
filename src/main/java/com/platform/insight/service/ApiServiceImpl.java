@@ -129,7 +129,7 @@ public class ApiServiceImpl implements ApiService{
 
             preparedStatement.setString(1,api.getBackup());
             preparedStatement.setString(2,api.getTemplate());
-            preparedStatement.setString(3,api.getTemplate());
+            preparedStatement.setString(3,api.getService());
 //            String format = String.format("update collection_list set backup='%s',template= '%s' where service = '%s' ",api.getBackup() ,api.getTemplate(),api.getService());
             boolean resultSet = preparedStatement.execute();
             preparedStatement.close();

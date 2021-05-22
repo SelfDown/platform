@@ -1,4 +1,4 @@
-package com.platform.insight.check;
+package com.platform.insight.platform_tool.check;
 
 import com.alibaba.fastjson.JSONObject;
 

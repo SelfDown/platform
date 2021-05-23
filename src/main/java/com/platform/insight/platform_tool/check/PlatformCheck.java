@@ -1,9 +1,9 @@
 package com.platform.insight.platform_tool.check;
 
-import com.alibaba.fastjson.JSONObject;
+import com.platform.insight.model.PlatformTemplate;
 
 import java.util.Map;
 
 public interface PlatformCheck {
-    Map<String, Object> check(Map<String, Object> actual, JSONObject final_template, boolean is_http);
+    Map<String, Object> check(Map<String, Object> actual, PlatformTemplate final_template, boolean is_http);
 }

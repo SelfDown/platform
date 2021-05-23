@@ -44,7 +44,7 @@ public class BaseService {
         PlatformTemplate final_template = PlatformTemplate.parseTemplate(template_final);
         PlatformLog log = new PlatformLogImp();
         final_template.setLog(log);
-        final_template.log("数据初始化成功");
+        final_template.log(final_template.getService()+"数据初始化成功");
         String service_type = final_template.getServiceType();//获取类型
         Result api = null;
         try {
@@ -64,13 +64,13 @@ public class BaseService {
         //生命周期：预检查
         final_template.log("生命周期：check 进行检查数据");
         Map<String, Object> check_result = api.check(template, final_template, is_http);
-        if (check_result.containsKey("success") && !(boolean) check_result.get("success")) {
+        if (!ResultUtils.isSuccess(check_result)) {
             return check_result;
         }
 
         final_template.log("生命周期：prepare 进行整合数据");
         Map<String, Object> prepare = api.prepare(template);
-        if (prepare.containsKey("success") && !(boolean) prepare.get("success")) {
+        if (!ResultUtils.isSuccess(prepare)) {
             return prepare;
         }
 

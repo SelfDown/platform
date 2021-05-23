@@ -87,5 +87,17 @@ public final class Const {
      * map 中的sql
      */
     public static final  String SQL = "SQL";
+    /**
+     * 规则分割字符
+     */
+    public static final String SPLIT = ",";
+    /**
+     *  第几页
+     */
+    public static final String PAGE = "page";
+    /**
+     * 页面size
+     */
+    public static final String SIZE = "size";
 
 }

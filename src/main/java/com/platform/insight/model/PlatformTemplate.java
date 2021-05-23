@@ -96,12 +96,60 @@ public class PlatformTemplate extends JSONObject {
         return map;
     }
 
+    public TemplateItemObj getPageTemplateItem() {
+        Map<String, Object> fieldsItemDict = this.getFieldsItemDict();
+        if (fieldsItemDict.containsKey(Const.PAGE)) {
+            TemplateItemObj o = (TemplateItemObj) fieldsItemDict.get(Const.PAGE);
+            return o;
+        }
+        return null;
+
+    }
+
+    public TemplateItemObj getSizeTemplateItem() {
+        Map<String, Object> fieldsItemDict = this.getFieldsItemDict();
+        if (fieldsItemDict.containsKey(Const.SIZE)) {
+            TemplateItemObj o = (TemplateItemObj) fieldsItemDict.get(Const.SIZE);
+            return o;
+        }
+        return null;
+
+    }
+
+    public Map<String, Object> getFieldsItemDict() {
+        TemplateItemArr fields = this.getFields();
+        Map<String, Object> map = new HashMap<>();
+        for (int i = 0; i < fields.size(); i++) {
+            TemplateItemObj templateItemObj = fields.getTemplateItemObj(i);
+            String field_1 = templateItemObj.getField_1();
+
+            if (StringUtils.isEmpty(field_1)) {
+                continue;
+            }
+            map.put(field_1, templateItemObj);
+        }
+        return map;
+
+    }
+
     public void setDefaultFields(TemplateItemArr defaultFields) {
         this.put(Const.DEFAULT_FIELDS, defaultFields);
     }
 
-    public String getDataSQL(){
+    public String getDataSQL() {
         return this.getString(Const.DATA_SQL);
+    }
+
+    public boolean isHttpNotSupport(boolean isHttp) {
+        String action_type = this.getString(Const.ACTION_TYPE);
+        return isHttp && !StringUtils.isEmpty(action_type) && !Const.HTTP.equals(action_type);
+
+    }
+
+    public boolean isRequireLogin() {
+        String login_require = this.getString(Const.LOGIN_REQUIRE);
+        return Const.TRUE.equals(login_require);
+
     }
 
 

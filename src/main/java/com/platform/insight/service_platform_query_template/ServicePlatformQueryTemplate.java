@@ -47,7 +47,7 @@ public class ServicePlatformQueryTemplate extends ServicePlatformQuery {
             return databaseFactoryInfo;
         }
         //获取对应的数据库工厂
-        DatabaseFactory databaseFactory = (DatabaseFactory) databaseFactoryInfo.get("data");
+        DatabaseFactory databaseFactory = (DatabaseFactory) databaseFactoryInfo.get(Const.DATA);
         Map<String, Object> req_params = finalTemplate.getDefaultFieldsDict();
         finalTemplate.log(req_params);
 

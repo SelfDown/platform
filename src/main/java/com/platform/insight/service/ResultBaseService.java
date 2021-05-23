@@ -526,7 +526,7 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
             Map<String, Object> checkResult = checkBean.check(actual, finalTemplate, is_http);
             //如果失敗了，直接返回
             if (!ResultUtils.isSuccess(checkResult)) {
-                finalTemplate.log(checkResult);
+
                 return checkResult;
             }
 
@@ -553,7 +553,10 @@ public abstract class ResultBaseService extends ServiceUtils implements Result {
                 finalTemplate.log(msg);
                 return ResultUtils.getResultMap(false, msg);
             }
-            filterBean.filter(actual, finalTemplate);
+            Map<String, Object> filter_result = filterBean.filter(actual, finalTemplate);
+            if (!ResultUtils.isSuccess(filter_result)){
+                return filter_result;
+            }
 
         }
         this.serviceLog("整合数据结束");
